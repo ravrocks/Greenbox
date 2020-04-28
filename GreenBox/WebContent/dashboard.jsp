@@ -144,7 +144,6 @@ $(document).ready(function() {
 	$('#example tbody').on( 'click', 'button', function () {
 	    var table = $('#example').DataTable();
     	var data = table.row( $(this).parents('tr') ).data();
-    	//alert( data["username"] +"'s salary is: "+ data["tags"] );
     	var sendFor=[];
         sendFor.push(data);
 		startDown(sendFor);
@@ -256,7 +255,7 @@ function validateInputs(tfir,usec,sdda,edda)
 		    valiid=false;
 		}
 	
-	var letters_only = '/^[A-Za-z]+$/';
+	var letters_only = '^[a-zA-Z_]+( [a-zA-Z_]+)*$';
 	if(!(usec.match(letters_only)))
 		{
 			if((valiid==true)&&usec.length>1)
@@ -347,14 +346,6 @@ $(document).ready(function(){
                 }
               });
 			}
-        $('#example tbody').on( 'click', 'button', function () {
-    	    var table = $('#example').DataTable();
-        	var data = table.row( $(this).parents('tr') ).data();
-        	//alert( data["username"] +"'s salary is: "+ data["tags"] );
-        	var sendFor=[];
-            sendFor.push(data);
-    		startDown(sendFor);
-    		});
 	  });
 	}
 );

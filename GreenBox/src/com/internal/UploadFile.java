@@ -51,7 +51,6 @@ public class UploadFile extends HttpServlet{
 		  PrintWriter out = response.getWriter();
 		  isMultipart = ServletFileUpload.isMultipartContent(request);
 	      response.setContentType("text/html");
-	      System.out.println("I'm in");
 		  String userPsno = null,userName=null;
             Cookie[] cookies = request.getCookies();
             if(cookies !=null){
@@ -98,9 +97,9 @@ public class UploadFile extends HttpServlet{
 	        		   else
 	        			   tlist.add(value);
 	        	   } else {
-	        		   System.out.println(item.getName());
-	                   System.out.println(item.getSize());
-	                   System.out.println(item.getContentType());
+	        		   //System.out.println(item.getName());
+	                   //System.out.println(item.getSize());
+	                   //System.out.println(item.getContentType());
 	                   elist=item.getContentType();
 	                   inputStream = item.getInputStream();
 	        	    }
