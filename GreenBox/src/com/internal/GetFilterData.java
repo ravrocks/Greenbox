@@ -75,10 +75,10 @@ public class GetFilterData extends HttpServlet {
               uname=off.get("user").toString().trim();
               sdates=off.get("sdate").toString().trim();
               edates=off.get("edate").toString().trim();
-              System.out.println("allwords is-"+alwords);
-              System.out.println("user is-"+uname);
-              System.out.println("sdate is-"+sdates);
-              System.out.println("edate is-"+edates);
+              //System.out.println("allwords is-"+alwords);
+              //System.out.println("user is-"+uname);
+              //System.out.println("sdate is-"+sdates);
+              //System.out.println("edate is-"+edates);
              }
 			 if(uname.length()<1)
 					uname="%";
@@ -152,7 +152,12 @@ public class GetFilterData extends HttpServlet {
 							
 							List<String> list_tags = new ArrayList<String>();
 					    	for(int j=0;j<str1.length;j++){
-					    			list_tags.add(str1[j]);
+					    		if(j==0)
+				    				list_tags.add(str1[j].substring(1, str1[j].length()));
+				    			else if(j+1==str1.length)
+				    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
+				    			else
+				    				list_tags.add(str1[j]);
 					    		}
 					    	json_tosend.accumulate("tags", list_tags);
 					    	jarray_tosend.add(arry,json_tosend);
@@ -173,7 +178,12 @@ public class GetFilterData extends HttpServlet {
 								json_tosend.accumulateAll(mapzz);
 								List<String> list_tags = new ArrayList<String>();
 								for(int j=0;j<str1.length;j++){
-								 list_tags.add(str1[j]);
+									if(j==0)
+					    				list_tags.add(str1[j].substring(1, str1[j].length()));
+					    			else if(j+1==str1.length)
+					    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
+					    			else
+					    				list_tags.add(str1[j]);
 								}
 							 json_tosend.accumulate("tags", list_tags);
 							 jarray_tosend.add(arry,json_tosend);

@@ -23,7 +23,7 @@
                     <div class="panel panel-login">
                         <div class="panel-heading">
                         <div class="logo">
-                            <img src="assets/images/logo2.png">   
+                            <img src="assets/images/lnt_Swc_logo.jpg">   
                         </div>
                         <div class="form-group">
                             <div class="row tab-head">
@@ -48,7 +48,7 @@
 										<input type="password" name="password" id="password" tabindex="2" class="form-control" autocomplete="off" placeholder="Password" required>
 									</div>
 									<div class="form-group" align="right">
-									     <a href="forgotpassword.jsp">Forgot Password?</a>
+									     <a href="#" >Forgot Password?</a>
 									</div>
 									<div class="form-group">
 										<div class="row">

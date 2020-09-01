@@ -85,7 +85,7 @@ public class DownloadFile extends HttpServlet {
 					System.out.println("Date Parsing error "+e1.toString());
 				}
 			  	conn=new getConnection().getConnection();
-			  	String queryx="SELECT * FROM document_details where docname=? and tag2='"+sbr.toString()+"' and date_=? and username=?";
+			  	String queryx="SELECT * FROM document_details where docname=? and tag2='{"+sbr.toString()+"}' and date_=? and username=?";
 			  	prepS=conn.prepareStatement(queryx);
 			  	prepS.setString(1,docname);
 			  	prepS.setDate(2, (java.sql.Date)sdate);

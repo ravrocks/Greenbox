@@ -40,8 +40,8 @@ public class Fetch_All extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		PrintWriter out = response.getWriter();  
-		  String requestz = request.getParameter("filters");
+		    PrintWriter out = response.getWriter();  
+		    //String requestz = request.getParameter("filters");
 		  
 		    Connection connection = null;
 		    Statement statement = null;
@@ -75,7 +75,12 @@ public class Fetch_All extends HttpServlet {
 					
 					List<String> list_tags = new ArrayList<String>();
 			    	for(int j=0;j<str1.length;j++){
-			    			list_tags.add(str1[j]);
+			    			if(j==0)
+			    				list_tags.add(str1[j].substring(1, str1[j].length()));
+			    			else if(j+1==str1.length)
+			    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
+			    			else
+			    				list_tags.add(str1[j]);
 			    		}
 			    	json_tosend.accumulate("tags", list_tags);
 			    	jarray_tosend.add(arry,json_tosend);

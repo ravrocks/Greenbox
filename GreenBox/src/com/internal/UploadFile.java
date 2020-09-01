@@ -137,9 +137,9 @@ public class UploadFile extends HttpServlet{
 		    }
              catch (Exception e) 
               {
-            	 //System.out.println(joshObj.toString());
+            	 System.out.println("Error in Upload "+e.toString());
             	 out.print(e.toString());
-                 e.printStackTrace();
+                 //e.printStackTrace();
               } 
 		  }
      

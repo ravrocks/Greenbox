@@ -25,7 +25,7 @@
 <link rel="icon" type="image/png" href="assets/images/faviconn.png">
 
 <style>
-#example_wrapper{
+#dt_Table_wrapper{
 width:100%;
 text-align: center;
 }
@@ -62,6 +62,29 @@ function base64ToArrayBuffer(base64) {
     return bytes;
 }	
 
+function startView(incoming) {
+	$.ajax({
+        type: "POST",
+        url: "ViewFile",
+        data: {viewthis:JSON.stringify(incoming)},
+        success : function(data, textStatus, request){
+        	
+        	var fname=request.getResponseHeader('Cdoc');
+        	var ctype=request.getResponseHeader('Ctype');
+        	var exten=request.getResponseHeader('Cextend');
+        	console.log(ctype);
+        	
+        	var bytes_decoded = base64ToArrayBuffer(data);
+        	var binaryData = [];
+        	binaryData.push(bytes_decoded);
+        	
+            var file = new Blob(binaryData, {type: ctype});
+            var fileURL = URL.createObjectURL(file);
+            window.open(fileURL);
+        	}
+		});
+	}
+	
 function startDown(incoming) {
 	$.ajax({
         type: "POST",
@@ -92,7 +115,7 @@ function startDown(incoming) {
 $(document).on('click', '.some-class', function(){ 
     var $btn=$(this);
     var $tr=$btn.closest('tr');
-    var dataTableRow=$('#example').DataTable().row($tr[0]); // get the DT row so we can use the API on it
+    var dataTableRow=$('#dt_Table').DataTable().row($tr[0]); // getting dt row
     var rowData=dataTableRow.data();
     console.log(rowData.msg);
 });
@@ -107,10 +130,9 @@ $(document).ready(function() {
             if(responseText!="")
                 {
             	//console.log(responseText);
-            	
             	var result = JSON.parse(responseText);
             	
-            	$('#example').DataTable({
+            	$('#dt_Table').DataTable({
                     fixedHeader: true,
                     columnDefs: [
                     	{
@@ -120,7 +142,7 @@ $(document).ready(function() {
                     	{
                     		targets: -1,
                     		data: null,
-                    		defaultContent: '<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button>Download</button>',
+                    		defaultContent: '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<button id="vme">View</button>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button id="dme">Download</button>',
                     	},
                     	{
                     		orderable:false,
@@ -141,12 +163,20 @@ $(document).ready(function() {
                 }
         }
 	});
-	$('#example tbody').on( 'click', 'button', function () {
-	    var table = $('#example').DataTable();
+	$('#dt_Table tbody').on( 'click', '#vme', function () {
+	    var table = $('#dt_Table').DataTable();
     	var data = table.row( $(this).parents('tr') ).data();
-    	var sendFor=[];
-        sendFor.push(data);
-		startDown(sendFor);
+    	var sendForV=[];
+        sendForV.push(data);
+        console.log("i'm viewing");
+		startView(sendForV);
+		});
+	$('#dt_Table tbody').on( 'click', '#dme', function () {
+	    var table = $('#dt_Table').DataTable();
+    	var data = table.row( $(this).parents('tr') ).data();
+    	var sendForD=[];
+        sendForD.push(data);
+		startDown(sendForD);
 		});
     
 });
@@ -158,7 +188,7 @@ $(document).ready(function() {
 
 <div class="col-md-12 col-sm-12 sticky-top align-self-center align-top">
         <nav class="navbar navbar-expand-md navigation-clean" style="margin-bottom: 5px">
-		<img class="img-fluid" style="height:auto" src="assets/images/swclogo.png">
+		<img class="img-fluid" style="height:auto" src="assets/images/lnt_Swc_logo.jpg">
 		<button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
 		<span class="sr-only">Toggle navigation</span>
           <span class="navbar-toggler-icon"><i class="fa fa-navicon" style="float: right"></i></span>
@@ -219,7 +249,7 @@ $(document).ready(function() {
             </div>
 </div>
 <div class="row col-md-12 col-lg-12 col-sm-12">
-<table id="example" class="mdl-data-table" style="width:100%">
+<table id="dt_Table" class="mdl-data-table" style="width:100%">
         <thead>
             <tr>
                 <th>Document name</th>
@@ -313,8 +343,8 @@ $(document).ready(function(){
                 	//console.log(responseText);
                 	var result = JSON.parse(responseText);
                 	
-                	$("#example").DataTable().destroy();
-                	$('#example').DataTable( {
+                	$("#dt_Table").DataTable().destroy();
+                	$('#dt_Table').DataTable( {
                         fixedHeader: true,
                     	columnDefs: [
                         	{
@@ -324,7 +354,7 @@ $(document).ready(function(){
                         	{
                         		targets: -1,
                         		data: null,
-                        		defaultContent: '<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button>Download</button>',
+                        		defaultContent: '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<button id="vme">View</button>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button id="dme">Download</button>'
                         	},
                         	{
                         		orderable:false,

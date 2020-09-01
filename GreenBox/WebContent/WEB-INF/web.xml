@@ -12,7 +12,7 @@
     <servlet-name>UploadFile</servlet-name>
     <url-pattern>/UploadFile</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>Registration</servlet-name>
     <servlet-class>com.internal.Registration</servlet-class>
   </servlet>
