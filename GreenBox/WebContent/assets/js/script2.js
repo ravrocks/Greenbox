@@ -2,13 +2,13 @@ var success=true;
 var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm'];  //acceptable file types
 function readURL(input) {
     if (input.files && input.files[0]) {
-        var extension = input.files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+        var extension = input.files[0].name.split('.').pop().toLowerCase();  //file extension from input file
+        //console.log('extension is',extension);
             isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
 
         if (isSuccess) { //yes
             var reader = new FileReader();
             reader.onload = function (e) {
-            	success=true;
                 if (extension == 'pdf'){
                 	$(input).closest('.fileUpload').find(".icon").attr('src','assets/images/179483.svg');
                 }
@@ -36,24 +36,25 @@ function readURL(input) {
               }
                 else {
                 	//console.log('here=>'+$(input).closest('.uploadDoc').length);
+                	$(input).closest('.fileUpload').find(".icon").attr('src','assets/images/unknown.svg');
                 	$(input).closest('.uploadDoc').find(".docErr").slideUp('slow');
-                	//$('fsubmit').click(false);
-                	success=false;
-                    console.log("oyez");
+                	$('#fsubmit').attr("disabled", true);
+                	$('#fsubmit').click(false);
                 }
             }
-            //$('fsubmit').attr("disabled", false);
+            $('#fsubmit').attr("disabled", false);
             reader.readAsDataURL(input.files[0]);
         }
         else {
-        		//console.log('here=>'+$(input).closest('.uploadDoc').find(".docErr").length);
+        	console.log('here=>'+$(input).closest('.uploadDoc').find(".docErr").length);
+        	$(input).closest('.fileUpload').find(".icon").attr('src','assets/images/unknown.svg');
             $(input).closest('.uploadDoc').find(".docErr").fadeIn();
             setTimeout(function() {
 				   	$('.docErr').fadeOut('slow');
-					}, 10000);
-            //$('fsubmit').click(function(){return false;});
-            success=false;
-            alert("oye");
+					}, 5000);
+            $('#fsubmit').attr("disabled", true);
+            $('#fsubmit').click(function(){return false;});
+            //alert("Ruk bhai");
         }
        
     }
@@ -74,11 +75,11 @@ $(document).ready(function(){
 
    $(".btn-new").on('click',function(){
 	   
-	   //$('#uploader').children().last().clone().appendTo("#uploader");
+	     //$('#uploader').children().last().clone().appendTo("#uploader");
 	   
-	   var $div= $('#uploader').children().last();
-	   var num = parseInt( $div.prop("id").match(/\d+/g), 10 ) +1;
-	   var $klon = $div.clone().prop('id', 'klon'+num );
+	   	 var $div= $('#uploader').children().last();
+	   	 var num = parseInt( $div.prop("id").match(/\d+/g), 10 ) +1;
+	   	 var $klon = $div.clone().prop('id', 'klon'+num );
 	   
 	   
 	     //console.log($klon.find('#tags').find('span'));
@@ -89,9 +90,10 @@ $(document).ready(function(){
 	     $klon.find('.upl').html('Upload document');
 	     $klon.find('.fileUpload').find(".icon").attr('src','assets/images/136549.svg');
 	     //$klon.find('input:text').val('');
-	   $klon.find("#namez").val('');
+	     $klon.find("#namez").val('');
 	   
-	   $div.after( $klon );
+	     $div.after( $klon );
+	     $('#fsubmit').attr("disabled", false);
         
    });
     

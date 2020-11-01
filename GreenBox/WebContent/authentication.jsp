@@ -9,7 +9,7 @@
     for(Cookie cookie : cookies)
     {
 	if(cookie.getName().equals("c_name")) userName = cookie.getValue();
-    if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();   
+        if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();       
     	}
     }
     if(userName == null) response.sendRedirect("home.jsp");
@@ -24,48 +24,29 @@ ResultSet rs1 = null;
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Time Sheet</title>
-<style >
-
-html, body {
-  height: 100%;
-}
-
-body {
-    padding-top: 30px;
-}
-
-div.k{
-	margin-right:30px;
-	position:relative;
-}
-</style>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<title>GreenBox</title>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
 <script>
-$(document).ready(function(){
-	  $("#search").on("keyup", function() {
-	    var value = $(this).val().toLowerCase();
-	    $("#table tr").filter(function() {
-	      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-	    });
-	  });
-	});
-
 //JavaScript popup window function
 	function basicPopup(url) {
 popupWindow = window.open(url,'popUpWindow','height=600,width=600,left=50,top=50,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
 	}
 
 </script>
+<style>
+#tablezz td{
+font-size:1.3rem;
+}
+#tablezz th{
+font-size:1.3rem;
+}
+</style>
 </head>
-<body>
-<div class="container" > 
-<div> Filter by Name or PS no.&nbsp;&nbsp;<input id="search" type="text" placeholder="Search.."><br><br></div>
+
+<div class="container" >
 <div>
-<table class="table table-hover table-bordered" id="table">
+<table class="table table-hover table-bordered" id="tablezz">
 <thead>
 <tr>
 <th scope="col">Name</th>
@@ -95,8 +76,12 @@ while(rs.next()){
 <td><%=rs.getString("designation") %></td>
 <td><%=rs.getString("domain") %></td>
 <td>
-	<a onclick="updation(<%=psn%>)" href=#>YES</a><div id="up"></div>
-	<a onclick="deletion(<%=psn%>)" href=#>NO</a><div id="del"></div>
+<a onclick="updation(<%=psn%>)" href=#><button type="button" class="btn btn-default btn-sm" style="font-size:1.1rem">
+          <span class="glyphicon glyphicon-ok-sign"></span>&nbsp;Accept
+        </button></a><div id="up"></div>
+<a onclick="deletion(<%=psn%>)" href=#><button type="button" class="btn btn-default btn-sm" style="font-size:1.1rem">
+          <span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Decline
+        </button></a><div id="del"></div>
 </td>
 </tr>
 </tbody>
@@ -124,10 +109,10 @@ function updation(str){
 	    document.getElementById("up").innerHTML = this.responseText;
 	    }
 	  };
-	 var xhttp;  
+	  var xhttp;  
 	  xhttp.open("POST", "update.jsp?psno="+str, true);
 	  xhttp.send();
-	  location.reload();
+	  window.location.reload(true);
 }
 function deletion(str){
 	var xhttp;
@@ -144,9 +129,9 @@ function deletion(str){
 	 var xhttp;  
 	  xhttp.open("POST", "deleteentry.jsp?psno="+str, true);
 	  xhttp.send();
-	  location.reload();
+	  window.location.reload(true);
 }
+
 </script>
-</body>
 
 </html>

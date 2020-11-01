@@ -101,22 +101,20 @@ public class GetFilterData extends HttpServlet {
 				connection = new getConnection().getConnection();
 				JSONArray jarray_tosend = new JSONArray();
 				int arry=0;
-				
 				for(int i=0;i<length;i++)
 				  {
 					//System.out.println(" value of i "+i);
 					String sql;
 					if(sdate==null){
-					sql ="select id,docname, username, date_, tag2 from document_details where ? = ANY(tag2) AND username like '"+uname+"'" ;
+					sql ="select id,docname, username, date_, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '"+uname+"'" ;
 					PreparedStatement ps = connection.prepareStatement(sql);
-					ps.setString(1, str[i]);
+					System.out.println("coming- "+str[i].toLowerCase());
 					rs=ps.executeQuery();
 					}
 					else{
-				    sql ="select id,docname, username, date_, tag2 from document_details where ? = ANY(tag2) AND username like '"+uname+"' AND date_>=? AND date_<=?";
+				    sql ="select id,docname, username, date_, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '"+uname+"' AND date_>=? AND date_<=?";
 				    PreparedStatement ps = connection.prepareStatement(sql);
-					ps.setString(1, str[i]);
-					ps.setString(2, uname);
+					ps.setString(1, uname);
 					ps.setDate(2, (java.sql.Date)sdate);
 					ps.setDate(3, (java.sql.Date)edate);
 					rs=ps.executeQuery(); 

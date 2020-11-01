@@ -25,15 +25,17 @@
 <!--  Javascripts -->
 
 <script src="assets/js/jquery-3.3.1.min.js"></script>
-<script src="assets/js/script2.js"></script>
 <script src="assets/js/bootstrap-4.2.1.min.js"></script>
 <script src="assets/js/sweetalert2.all.min.js"></script>
+<script src="assets/js/script2.js"></script>
 <!--  IE support for sweetalert -->
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7.1.0/dist/promise.min.js"></script>
 
 <link rel="icon" type="image/png" href="assets/images/faviconn.png">
 </head>
+
 <body>
+
 <div class="container">
 <div class="row it">
 <div class="col-sm-offset-1 col-sm-10" id="one">
@@ -54,8 +56,8 @@ Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'doc
       <img src="assets/images/136549.svg" class="icon">
       <span class="upl" id="upload">Upload document</span>
       <input type="file" class="upload up" id="up" onclick="readURL(this);" onchange="readURL(this);" />
-    </div><!-- btn-orange -->
-  </div><!-- col-3 -->
+    </div>
+  </div>
   
   <div class="col-sm-8">
     <input type="text" id="namez" class="form-control" name="namez" placeholder="Title" maxlength="60">
@@ -89,6 +91,7 @@ var success=true;
 $(document).ready(function(){
 	$("#fsubmit").click(function (){
 		var joshObj=new FormData();
+		var succ_array=[];
 		$("#uploader .uploadDoc").each(function(){
 			var current_row=$(this);
 			var filename=current_row.find("#namez").val();
@@ -98,9 +101,9 @@ $(document).ready(function(){
 			if(filename.length<1 || tags.length<1 || ffcontent.length<1)
 				{
 				alert("Fields cannot be left blank.");
-				success=false;
+				succ_array.push(false);
+				return;
 				}
-			//var itemx = new FormData();
 			joshObj.append("filename", filename);
 			joshObj.append("tags",tags);
 			joshObj.append("content",current_row.find("#up")[0].files[0]);
@@ -108,12 +111,17 @@ $(document).ready(function(){
 			var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm'];  //acceptable file types
 			filezz= mefile.split('.');
 			var extension = filezz[1].toLowerCase();
-	        success= fileTypes.indexOf(extension) > -1;
+	        successd= fileTypes.indexOf(extension) > -1;
+	        //console.log("val of successd-",successd);
+	        succ_array.push(successd);
 		});
 		
-		if(success)
+		let checker = arr => arr.every(v => v === true);
+		
+		if(checker(succ_array))
 		{
-		 $.ajax({
+			console.log("I'm in!");
+		  $.ajax({
 	            type: "POST",
 	            url: "UploadFile",
 	            enctype: 'multipart/form-data',
@@ -128,7 +136,7 @@ $(document).ready(function(){
 	                else
 	                showInfo();
 	                }
-	            });
+	            }); 
 		}
 		var $div= $('#uploader').children().last();
 	});

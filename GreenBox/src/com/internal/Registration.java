@@ -9,7 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,7 +81,60 @@ public class Registration extends HttpServlet{
 					    ps.close();
 					    con.close();
 					    request.setAttribute("success", "Registration successful.");
-                             RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
+					  //Logic for Mail Generation						   
+						   // Recipient's email ID needs to be mentioned.
+						   String to = "gr-ravi@lntecc.com";
+
+						   // Sender's email ID needs to be mentioned
+						   String from = "swctic.greenbox@gmail.com";
+
+						   // Assuming you are sending email from localhost
+						   //String host = "localhost";
+
+						   // Get system properties object
+						   Properties props = System.getProperties();
+
+						   // Setup mail server
+						      props.put("mail.smtp.host", "smtp.gmail.com");    
+					          props.put("mail.smtp.socketFactory.port", "465");    
+					          props.put("mail.smtp.socketFactory.class",    
+					                    "javax.net.ssl.SSLSocketFactory");    
+					          props.put("mail.smtp.auth", "true");    
+					          props.put("mail.smtp.port", "465"); 
+
+						   // Get the default Session object.
+						   Session mailSession = Session.getInstance(props,new javax.mail.Authenticator() {    
+					           protected PasswordAuthentication getPasswordAuthentication() {    
+					               return new PasswordAuthentication(from,"Lnt@123456");  
+					               }});
+						   
+						   try {
+						      // Create a default MimeMessage object.
+						      MimeMessage message = new MimeMessage(mailSession);
+						      // Set From: header field of the header.
+						      message.setFrom(new InternetAddress(from));
+						      // Set To: header field of the header.
+						      message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+						      // Set Subject: header field
+						      message.setSubject("GreenBox User Approval");
+						      
+						      message.setContent("<div><p>Kindly, approve the access for the new user-</p></div>"
+						      		+ "<div><table style='border: 1px solid black'>"
+						      		+ "<tr ><td style='border: 1px solid black'>UserName</td><td style='border: 1px solid black'>"+name+"</td></tr>"
+						      		+ "<tr ><td style='border: 1px solid black'>Psno</td><td style='border: 1px solid black'>"+psno+"</td></tr>"
+						      		+ "<tr ><td style='border: 1px solid black'>Email</td><td style='border: 1px solid black'>"+email+"</td></tr>"
+						      		+ "<tr ><td style='border: 1px solid black'>Designation</td><td style='border: 1px solid black'>"+designation+"</td></tr>"
+						      		+ "<tr ><td style='border: 1px solid black'>Team</td><td style='border: 1px solid black'>"+domain+"</td></tr>"
+						      		+ "</table></div>", "text/html; "+ "charset=utf-8");
+						      	Transport.send(message);
+						      	System.out.println("Sent message successfully to "+email);
+						      
+						    	} catch (Exception mex) {
+						    		mex.printStackTrace();
+						    		System.err.println("Registration- Error: unable to send alert to user..");
+						    	}
+					    
+                     RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 						rd.forward(request, response);
 					   } 
 				   }catch (ClassNotFoundException | SQLException e) {

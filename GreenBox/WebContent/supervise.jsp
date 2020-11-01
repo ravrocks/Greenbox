@@ -8,11 +8,10 @@
     if(cookies !=null){
     for(Cookie cookie : cookies){
 	if(cookie.getName().equals("c_name")) userName = cookie.getValue();
-        if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();
-        if(cookie.getName().equals("show_month")) showMonth = cookie.getValue();        
+        if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();  
     }
     }
-    if(userName == null) response.sendRedirect("home.jsp");
+    if(!userName.equals("admin")) response.sendRedirect("logout.jsp");
 
 Connection connection = null;
 ResultSet rs = null;
@@ -33,7 +32,7 @@ String psn = request.getParameter("psno");
 <%
 try{
 connection = new getConnection().getConnection();
-String sql ="update userdata set validity=? where psno=?";
+String sql ="update userdata set validity=? where psno=? and validity=0";
 PreparedStatement ps = connection.prepareStatement(sql); 
 ps.setInt(1, 1);
 ps.setInt(2, Integer.parseInt(psn));

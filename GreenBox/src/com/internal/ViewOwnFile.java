@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,14 +25,14 @@ import com.google.gson.JsonParser;
 /**
  * Servlet implementation class ViewFile
  */
-@WebServlet("/ViewFile")
-public class ViewFile extends HttpServlet {
+@WebServlet("/ViewMyFile")
+public class ViewOwnFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ViewFile() {
+    public ViewOwnFile() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,6 +42,18 @@ public class ViewFile extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String userPsno = null,userName=null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies !=null){
+            for(Cookie cookie : cookies){
+            	if(cookie.getName().equals("c_name")) userName = cookie.getValue();
+                if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();
+            }
+        }
+        if(userName==null || userPsno==null) {
+        	System.out.println("Security breach!");
+        	return;
+        }
 		 String requestz = request.getParameter("viewthis");
 		 //System.out.println("Im viewing only.");
 		  //File stream related logic/////////
@@ -54,18 +67,19 @@ public class ViewFile extends HttpServlet {
           JsonArray jaaray=je.getAsJsonArray();
           JsonElement joshObj=null;
           String fileetype="";
-         ////////////////////////////////////
-		  
+         ///////////////////////////////////
+         
          joshObj= jaaray.get(0);
          org.json.JSONObject off=new org.json.JSONObject (joshObj.toString());
          String docname=off.get("documentname").toString().trim();
-         String uname=off.get("username").toString().trim();
+         //String uname=off.get("username").toString().trim();
          String udate=off.get("uploaddate").toString().trim();
          String ctags=off.get("tags").toString().trim();
-
+         
          ctags = ctags.replace("\"", "");
+         
          ///Logic for handling malformed tags
-         StringBuilder sbr = new StringBuilder();
+         	StringBuilder sbr = new StringBuilder();
 			for (char c : ctags.toCharArray()) {
 		    if (!((c=='\\')||(c=='[')||(c==']')||(c=='/'))) 
 		    	sbr.append(c);
@@ -82,11 +96,11 @@ public class ViewFile extends HttpServlet {
          			System.out.println("Date Parsing error "+e1.toString());
          	}
          conn=new getConnection().getConnection();
-         String queryx="SELECT * FROM document_details where docname=? and tag2='{"+sbr.toString()+"}' and date_=? and username=?";
+         String queryx="SELECT * FROM document_details_backup where docname=? and tag2='{"+sbr.toString()+"}' and date_=? and username=?";
          prepS=conn.prepareStatement(queryx);
          prepS.setString(1,docname);
          prepS.setDate(2, (java.sql.Date)sdate);
-         prepS.setString(3,uname);
+         prepS.setString(3,userName);
          ress=prepS.executeQuery();
 
          while(ress.next())
@@ -118,7 +132,7 @@ public class ViewFile extends HttpServlet {
          	}
 			catch(Exception e)
 			{
-			System.out.println("Viewing error- "+e.toString());
+			System.out.println("Viewing own error- "+e.toString());
 			}
          finally
          	{
@@ -131,7 +145,7 @@ public class ViewFile extends HttpServlet {
 		  }
 		  	catch(Exception e)
 		  		{
-		  			System.out.println("Viewing error- "+e.toString());
+		  			System.out.println("Viewing own error- "+e.toString());
 		  		}
 }
 

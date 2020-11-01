@@ -59,11 +59,11 @@ public class UploadFile extends HttpServlet{
                     if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();
                 }
             }
-            Connection conn=null;
-           //JsonElement joshObj=null;
-		   try {
-			   conn=new getConnection().getConnection();
-	           //Statement statz=conn.createStatement();       
+            if(userName==null || userPsno==null) {
+            	System.out.println("Security breach!");
+            	return;
+            }
+		   try(Connection conn=new getConnection().getConnection();) {     
 	           //Parsing loogic
 	           DiskFileItemFactory factory = new DiskFileItemFactory();
 	           
@@ -107,7 +107,7 @@ public class UploadFile extends HttpServlet{
 	        	   {
 	        		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	        		   Date dt=new Date();
-	        		   String query="insert into document_details(docname,username,date_,tag2,contents,extension) values(?,?,?,'{"+tlist.get(0)+"}',?,?)";
+	        		   String query="insert into document_details_backup(docname,username,date_,tag2,contents,extension,userpsno) values(?,?,?,'{"+tlist.get(0)+"}',?,?,?)";
 	        		   PreparedStatement prepS = conn.prepareStatement(query);
         			   conn.setAutoCommit(false);
 	        		   for(int i=0;i<flist.size();i++)
@@ -121,6 +121,7 @@ public class UploadFile extends HttpServlet{
 	        			   //prepS.setArray(4, conn.createArrayOf("VARCHAR", tlist.toArray()));
 	        			   prepS.setBinaryStream(4, inputStream);
 	        			   prepS.setString(5, elist);
+	        			   prepS.setInt(6, Integer.parseInt(userPsno.trim()));
 	        			   prepS.addBatch();
 	        		   }
 	        		   prepS.executeBatch();
@@ -138,9 +139,10 @@ public class UploadFile extends HttpServlet{
              catch (Exception e) 
               {
             	 System.out.println("Error in Upload "+e.toString());
-            	 out.print(e.toString());
+            	 out.print(e.toString().substring(60));
+            	 System.err.print("Error in Upload "+e.toString());
                  //e.printStackTrace();
-              } 
+              }
 		  }
      
      private String getHours(String f1,String f2)
@@ -155,7 +157,7 @@ public class UploadFile extends HttpServlet{
          }
          catch(Exception e)
          {
-             
+             System.err.print(e.toString());
          }
          return hxx+"";   
      }

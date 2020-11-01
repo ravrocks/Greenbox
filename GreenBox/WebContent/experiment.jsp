@@ -86,7 +86,7 @@ $(document).ready(function(){
          	{ "data" : "username" },
          	{ "data" : "uploaddate" },
          	{ "data" : "tags" },
-         	{"data"  : ""
+         	{ "data"  : ""
          	}
          ]
     

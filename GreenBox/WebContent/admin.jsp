@@ -6,50 +6,50 @@
 <html>
 <%
     String userName = null;
+    String showMonth=null;
     Cookie[] cookies = request.getCookies();
     if(cookies !=null){
     for(Cookie cookie : cookies){
 	if(cookie.getName().equals("c_name")) userName = cookie.getValue();
-    //if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();
+        if(cookie.getName().equals("show_month")) showMonth = cookie.getValue();
     }
     }
-    //System.out.println(userName);
     if(!userName.equals("admin")) response.sendRedirect("logout.jsp");
     
 %>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>demo</title>
-    <script src="assets/js/jquery.min.js"></script>
+    <title>GreenBox</title>
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
     
     
     <!-- Css files  -->
-    <link rel="stylesheet" href="assets/css/bootstrap-4.2.1.min.css">
+    <!-- Bootstrap files (jQuery first, then Popper.js, then Bootstrap JS) -->
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css"/>
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-4.2.1.min.css">
     <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/css/Animated-numbers-section.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="assets/css/dh-navbar-inverse.css">
+    <link rel="icon" type="image/png" href="assets/images/faviconn.png">
     
-    <script src="assets/js/bootstrap-4.2.1.min.js"></script>
 </head>
 
 <body>
     
-    <section class="wrapper-numbers">
+    
         <div class="container-fluid">
-            <div class="row countup">
-               <div class="col-md-12 col-sm-6 sticky-top align-self-center align-top" style="margin-top: -60px;padding:0px">
-                    <nav class="navbar navbar-expand-md navigation-clean " style="-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;">
-                    <img class="img-fluid" style="height:auto" src="assets/images/swclogo.png">
-                    <button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navcol-1" >
+            <div class="row">
+               <div class="col-md-12 col-sm-6 sticky-top align-self-center align-top" style="margin-top: 0px;padding:0px">
+                    <nav class="navbar navbar-expand-md navigation-clean">
+  					<img class="img-fluid" style="height:auto" src="assets/images/lnt_Swc_logo.jpg">
+  					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+    				<span class="navbar-toggler-icon"></span>
+  					</button>
+                    <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="nav navbar-nav ml-auto" style="float:right;">
                         <li class="nav-item" role="presentation"><a uk-scroll="offset:100">Welcome&nbsp;<%out.println(userName);%></a></li>
                         <li class="nav-item" role="presentation"><a href="logout.jsp" uk-scroll="offset:50">Logout</a></li>
@@ -58,28 +58,32 @@
                     </nav>
                 </div>
             </div>
-        </div>
-    </section>
-    <div>
-             <br>
-    </div>
-    <section>
-    	 <div class="card" style="margin-top: -40px">
+            <div class="card" style="margin-top: 10px">
                 <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link active" href="#item-1-1" id="item-1-1-tab" data-toggle="tab" role="tab" aria-controls="item-1-1" aria-selected="true">User Authentication</a></li>
-                        </ul>
+                    <ul class="nav nav-tabs" role="tablist" style="font-size:1.4rem">
+                        <li class="nav-item"><a class="nav-link" href="#item-1-1" id="item-1-1-tab" data-toggle="tab" role="tab" aria-controls="item-1-1" aria-selected="true">User Authentication</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#item-1-2" id="item-1-2-tab" data-toggle="tab" role="tab" aria-controls="item-1-2" aria-selected="true">Modify Supervisor List</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#item-1-3" id="item-1-3-tab" data-toggle="tab" role="tab" aria-controls="item-1-3" aria-selected="false">Show/Modify Team</a></li>                   	
+                    </ul>
                 </div>
-         <style>a:hover{font-weight:normal;}</style>
+         
             <div class="card-body" >
                 <div id="nav-tabContent" class="tab-content">
-                <div style="color: #000;text-align: left" id="item-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="item-1-1-tab">
+                <div style="color: #000;text-align: left;font-size:1.2rem" id="item-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="item-1-1-tab">
                     <jsp:include page="authentication.jsp" />
+                </div>
+                <div style="color: #000;text-align: left;font-size:1.2rem" id="item-1-2" class="tab-pane" role="tabpanel" aria-labelledby="item-1-2-tab">
+                    <jsp:include page="modif_Superv.jsp" />
+                </div>
+                <div style="color: #000;text-align: left;font-size:1.2rem" id="item-1-3" class="tab-pane" role="tabpanel" aria-labelledby="item-1-3-tab">
+                    <jsp:include page="show_Team.jsp" />
                 </div>
                 </div>
             </div>
      </div>
-    </section>
+        </div>
+
+    	 
     
 </body>
 

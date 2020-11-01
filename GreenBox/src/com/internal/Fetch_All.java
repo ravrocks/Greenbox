@@ -44,7 +44,6 @@ public class Fetch_All extends HttpServlet {
 		    //String requestz = request.getParameter("filters");
 		  
 		    Connection connection = null;
-		    Statement statement = null;
 		    ResultSet rs = null;
 		    String documentname= "\0";
 			String username="\0";
