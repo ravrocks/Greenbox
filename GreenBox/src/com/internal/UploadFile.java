@@ -1,29 +1,26 @@
 package com.internal;
 
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.internal.getConnection;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -31,7 +28,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
@@ -55,8 +51,8 @@ public class UploadFile extends HttpServlet{
             Cookie[] cookies = request.getCookies();
             if(cookies !=null){
                 for(Cookie cookie : cookies){
-                	if(cookie.getName().equals("c_name")) userName = cookie.getValue();
-                    if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue();
+                	if(cookie.getName().equals("c_name")) userName = cookie.getValue().trim();
+                    if(cookie.getName().equals("c_psno")) userPsno = cookie.getValue().trim();
                 }
             }
             if(userName==null || userPsno==null) {
@@ -87,7 +83,7 @@ public class UploadFile extends HttpServlet{
 	           ArrayList<String> category_list=new ArrayList<String>();
 	           String elist="";
 	           
-	           while ( iter.hasNext () ) 
+	           while(iter.hasNext()) 
 	           {
 	        	   FileItem item = (FileItem) iter.next();
 	        	   if (item.isFormField()) {
@@ -136,8 +132,70 @@ public class UploadFile extends HttpServlet{
 	                   inputStream=null;
 	        	   }
 	           }
+	           PreparedStatement find_super_mail=conn.prepareStatement("select email from userdata u where CAST(u.psno as varchar) in (select supervisor from userdata u2 where u2.psno="+userPsno+")");
+	           ResultSet find_super_mail_result=find_super_mail.executeQuery();
+	           find_super_mail_result.next();
+	           String to_mail=find_super_mail_result.getString(1);
+	           find_super_mail_result.close();
+	           find_super_mail.close();
+	           
+	           if(!(to_mail.length()<1))
+	           {
+	        	   final String by_username=userName;
+	        	   System.out.println("mail to -> "+to_mail);
+	           new Thread(()->
+	            {
+	        	 //Logic for Mail Generation						   
+				   // Recipient's email ID needs to be mentioned.
+				   String to = to_mail;
+				   
+				   // Sender's email ID needs to be mentioned
+				   String from = "swctic.greenbox@gmail.com";
+
+				   // Assuming you are sending email from localhost
+				   //String host = "localhost";
+
+				   // Get system properties object
+				   Properties props = System.getProperties();
+
+				   // Setup mail server
+				      props.put("mail.smtp.host", "smtp.gmail.com");    
+			          props.put("mail.smtp.socketFactory.port", "465");    
+			          props.put("mail.smtp.socketFactory.class",    
+			                    "javax.net.ssl.SSLSocketFactory");    
+			          props.put("mail.smtp.auth", "true");    
+			          props.put("mail.smtp.port", "465"); 
+
+				   // Get the default Session object.
+				   Session mailSession = Session.getInstance(props,new javax.mail.Authenticator() {    
+			           protected PasswordAuthentication getPasswordAuthentication() {    
+			               return new PasswordAuthentication(from,"Lnt@123456");  
+			               }});
+				   
+				   try {
+				      // Create a default MimeMessage object.
+				      MimeMessage message = new MimeMessage(mailSession);
+				      // Set From: header field of the header.
+				      message.setFrom(new InternetAddress(from));
+				      // Set To: header field of the header.
+				      message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+				      // Set Subject: header field
+				      message.setSubject("GreenBox Document Update");
+				      
+				      message.setContent("<div><p>A new document has been uploaded by <b>"+by_username+"</b>. Kindly, take necessary action.</p></div>", "text/html; "+ "charset=utf-8");
+				      	Transport.send(message);
+				      	System.out.println("Sent message successfully to "+to);
+				      
+				    	} catch (Exception mex) {
+				    		mex.printStackTrace();
+				    		System.err.println("Mail- Error: unable to send mail to supervisor..");
+				    	}
+			    
+	              }).start();
+	            }
 	           //statz.close();
                conn.close();
+               
                
 		    }
              catch (Exception e) 
