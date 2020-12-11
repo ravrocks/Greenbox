@@ -80,6 +80,7 @@ public class ViewUploads extends HttpServlet {
 	    		JSONObject json_tosend = new JSONObject();
 	        	documentname= rs.getString(1);
 				tags=rs.getString(3);
+				//System.out.println("tags is "+tags);
 				subdate=rs.getString(2);
 				statuss=rs.getString(4);
 				String[] str1=tags.split(",");
@@ -91,13 +92,17 @@ public class ViewUploads extends HttpServlet {
 				
 				List<String> list_tags = new ArrayList<String>();
 		    	for(int j=0;j<str1.length;j++){
-		    			if(j==0)
-		    				list_tags.add(str1[j].substring(1, str1[j].length()));
+		    			if((j==0)&&(j+1==str1.length))
+		    				list_tags.add(str1[j].substring(1, str1[j].length()-1));
+		    			else if(j==0)
+		    				list_tags.add(str1[j].substring(1, str1[j].length())); 
 		    			else if(j+1==str1.length)
 		    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
 		    			else
 		    				list_tags.add(str1[j]);
 		    		}
+		    	
+		    	//System.out.println("tagslist is "+list_tags.toString());
 		    	json_tosend.accumulate("tags", list_tags);
 		    	jarray_tosend.add(arry,json_tosend);
 		    	arry++;

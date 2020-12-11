@@ -46,15 +46,12 @@ public class Fetch_All extends HttpServlet {
 		    Connection connection = null;
 		    ResultSet rs = null;
 		    String documentname= "\0";
-			String username="\0";
-			String subdate="\0";
-			String tags="\0";
-			String id="\0";
+			String username="\0",subdate="\0",appdate="\0",tags="\0",id="\0";
 			JSONArray jarray_tosend = new JSONArray();
 			int arry=0;
 		    try {
 		    	connection=new getConnection().getConnection();
-		    	String sqlq ="select docname, username, date_, tag2 from document_details";
+		    	String sqlq ="select docname, username, date_, appdate, tag2 from document_details";
 		        PreparedStatement ps = connection.prepareStatement(sqlq);
 		        rs=ps.executeQuery();
 		        while(rs.next())
@@ -64,17 +61,21 @@ public class Fetch_All extends HttpServlet {
 		        	documentname= rs.getString(1);
 					username=rs.getString(2);
 					subdate=rs.getString(3);
-					tags=rs.getString(4);
+					appdate=rs.getString(4);
+					tags=rs.getString(5);
 					String[] str1=tags.split(",");
 					mapzz.put("documentname",documentname);
 					mapzz.put("username",username);
 					mapzz.put("uploaddate",subdate);
+					mapzz.put("app_date",appdate);
 					
 					json_tosend.accumulateAll(mapzz);
 					
 					List<String> list_tags = new ArrayList<String>();
 			    	for(int j=0;j<str1.length;j++){
-			    			if(j==0)
+			    		if((j==0)&&(j+1==str1.length))
+		    				list_tags.add(str1[j].substring(1, str1[j].length()-1));
+		    			else if(j==0)
 			    				list_tags.add(str1[j].substring(1, str1[j].length()));
 			    			else if(j+1==str1.length)
 			    				list_tags.add(str1[j].substring(0, str1[j].length()-1));

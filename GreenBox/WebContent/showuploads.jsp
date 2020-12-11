@@ -25,6 +25,8 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 <link rel="stylesheet" href="assets/css/text-box.css"/>
 <link rel="stylesheet" href="assets/css/foopicker.css"/>
+<link rel="stylesheet" href="assets/css/sweetalert2.min.css">
+<link rel="stylesheet" href="assets/css/sweetalert2.css">
 <link rel="icon" type="image/png" href="assets/images/faviconn.png">
 
 <style type="text/css">
@@ -44,11 +46,91 @@ label{
 highlight {
     border: 2px solid red;
 }
+#change_file
+{
+color: #494949 !important;
+text-transform: uppercase;
+text-decoration: none;
+border: 0px solid #494949 !important;
+display: inline-block;
+transition: all 0.4s ease 0s;
+cursor: pointer;
+}
+#change_file:hover
+{
+font-weight: 600;
+margin: 0;
+color: #ffffff !important;
+background: #f6b93b;
+border-color: #f6b93b !important;
+transition: all 0.4s ease 0s;
+}
+#download_file
+{
+color: #494949 !important;
+text-transform: uppercase;
+text-decoration: none;
+border: 0px solid #494949 !important;
+display: inline-block;
+transition: all 0.4s ease 0s;
+cursor: pointer;
+}
+#download_file:hover
+{
+font-weight: 600;
+margin: 0;
+color: #ffffff !important;
+background: #20bf6b;
+border-color: #f6b93b !important;
+transition: all 0.4s ease 0s;
+}
+#view_file
+{
+color: #494949 !important;
+text-transform: uppercase;
+text-decoration: none;
+border: 0px solid #494949 !important;
+display: inline-block;
+transition: all 0.4s ease 0s;
+cursor: pointer !important;
+}
+#view_file:hover
+{
+font-weight: 600;
+margin: 0;
+color: #ffffff !important;
+background: #434343;
+border-color: #f6b93b !important;
+transition: all 0.4s ease 0s;
+}
+#remove_file
+{
+color: #d44f46 !important;
+text-transform: uppercase;
+text-decoration: none;
+border: 0px solid #d44f46 !important;
+display: inline-block;
+transition: all 0.4s ease 0s;
+cursor: pointer !important;
+}
+#remove_file:hover
+{
+font-weight: 600;
+margin: 0;
+color: #ffffff !important;
+background: #d44f46;
+border-color: #d44f46 !important;
+transition: all 0.4s ease 0s;
+cursor: pointer !important;
+}
 
 </style>
 
 <script src="assets/js/foopicker.js"></script>
 <script type="text/javascript" src="assets/js/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.js"></script>
+<script src="assets/js/sweetalert2.all.min.js"></script>
+
 
 <script>
 function basicPopup(url) {
@@ -89,6 +171,34 @@ function startView(incoming) {
 		});
 	}
 	
+function startRemove(incoming) {
+	Swal.fire({
+	    title: 'Remove File?',
+	    text: 'The uploaded file will be removed from the Database!',
+	    type: 'warning',
+	    showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Yes, delete it!"
+	    }).then(function(result){
+	    	  if(result.value){
+	        	console.log("yep in");
+	        	$.ajax({
+	                type: "POST",
+	                url: "RemoveFile",
+	                data: {removethis:JSON.stringify(incoming)},
+	                success : function(responseText){
+	                	if(responseText=="")
+	                		Swal.fire("Deleted!", "Your file has been deleted.", "success");
+	                	else
+	                		Swal.fire("Error!", "Deletion failed."+responseText, "error");
+	                }
+	            });
+	        }else
+	            Swal.fire("Cancelled", "Your file is safe :)", "error");
+	    	});
+		}
+	
 function startDown(incoming) {
 	$.ajax({
         type: "POST",
@@ -114,6 +224,37 @@ function startDown(incoming) {
             document.body.removeChild(a);
         	}
 		});
+	}
+	
+function OpenWindowWithPost(url, windowoption, name, params)
+{
+         var form = document.createElement("form");
+         form.setAttribute("method", "post");
+         form.setAttribute("action", url);
+         form.setAttribute("target", name);
+
+         for (var i in params) {
+             if (params.hasOwnProperty(i)) {
+                 var input = document.createElement('input');
+                 input.type = 'hidden';
+                 input.name = i;
+                 input.value = params[i];
+                 form.appendChild(input);
+             }
+         }
+         
+         document.body.appendChild(form);
+         //note I am using a post.htm page since I did not want to make double request to the page 
+        //it might have some Page_Load call which might screw things up.
+         window.open("post.htm", name, windowoption);
+         form.submit();
+         document.body.removeChild(form);
+ }
+
+function startEdit(incoming) {
+	OpenWindowWithPost("editFiles.jsp", 
+		      "height=600,width=1000,left=50,top=50,resizable=yes,scrollbars=yes", 
+		      "editFiles", {editthis:JSON.stringify(incoming)});
 	}
 	
 $(document).on('click', '.some-class', function(){ 
@@ -164,14 +305,18 @@ $(document).ready(function(){
                 	{
                 		targets: -1,
                 		data: null,
-                		defaultContent: '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<button id="vme">View</button>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button id="dme">Download</button>'
+                		defaultContent: '<div id="view_file"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;<button id="vme">View</button></div>&nbsp;&nbsp;&nbsp;<div id="download_file"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;<button id="dme">Download</button></div>&nbsp;&nbsp;<div id="change_file"><span class="glyphicon glyphicon-wrench"></span>&nbsp;<button id="eme">Edit</button></div>&nbsp;<div id="remove_file" style="float:left"><span class="glyphicon glyphicon-remove"></span>&nbsp;<button id="rme">Remove</button></div>'
                 	},
                 	{
                 		orderable:false,
                 		targets: [4]
+                	},
+                	{
+                		selectable:false,
+                		targets: [4]
                 	}
              	  ],
-                 "sDom": '<"top">rt<"bottom"lp><"clear">',
+                 "sDom": '<"top">frt<"bottom">lp<"clear">',
                  "data" : result,
                  "columns" : [
                      { "data" : "documentname" },
@@ -184,7 +329,7 @@ $(document).ready(function(){
                 	 //console.log(row);
                          if( data['status'] == 'Pending'  ){
                         	 //$(row).find('td:eq(3)').css('color', 'red');
-                             $(row).find('td:eq(3)').replaceWith( "<button type='button' class='btn btn-danger' style='margin-left: 2vmin;margin-top: 3vmin;float: left;text-align: center;'>Pending</button>" );
+                             $(row).find('td:eq(3)').replaceWith( "<button type='button' class='btn btn-danger' style='margin-left: 2vmin;margin-top: 3vmin;float: left;text-align: center;outline: none'>Pending</button>" );
                         	 //$(row).css('background-color', '#F39B9B');
                          }
                          else
@@ -214,5 +359,20 @@ $('#dt_Table_s tbody').on( 'click', '#dme', function () {
     sendForD.push(data);
 	startDown(sendForD);
 	});
+$('#dt_Table_s tbody').on( 'click', '#change_file', function () {
+    var table = $('#dt_Table_s').DataTable();
+	var data = table.row( $(this).parents('tr') ).data();
+	var sendForE=[];
+    sendForE.push(data);
+	startEdit(sendForE);
+	});
+$('#dt_Table_s tbody').on( 'click', '#rme', function () {
+    var table = $('#dt_Table_s').DataTable();
+	var data = table.row( $(this).parents('tr') ).data();
+	var sendForR=[];
+    sendForR.push(data);
+	startRemove(sendForR);
+	});
+	
 </script>
 </html>

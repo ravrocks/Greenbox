@@ -128,6 +128,7 @@ input[type=number] {
 </div>
 
 <div class="col-md-5 col-lg-5 col-sm-5">
+<label style="font-size:1.4rem">List of Unlinked Users</label>
 <table id="dt_Table_sx" class="mdl-data-table" style="width:100%;">
 <thead>
 <tr>
@@ -145,14 +146,16 @@ input[type=number] {
 </div>
 
 <div class="col-md-6 col-lg-6 col-sm-6" style="">
+<label style="font-size:1.4rem">List of Users with TeamLeader/Supervisor</label>
 <table id="dt_Table_s" class="mdl-data-table" style="width:100%;">
 <thead>
 <tr>
 <th scope="col" class="col-md-1 col-lg-1 col-sm-1">No.</th>
-<th scope="col" class="col-md-1 col-lg-1 col-sm-1">Supervisor Name</th>
-<th scope="col" class="col-md-1 col-lg-1 col-sm-1">Supervisor Psno</th>
 <th scope="col" class="col-md-1 col-lg-1 col-sm-2">Member Name</th>
 <th scope="col" class="col-md-2 col-lg-2 col-sm-1">Member Psno</th>
+<th scope="col" class="col-md-1 col-lg-1 col-sm-1">TeamLeader Name</th>
+<th scope="col" class="col-md-1 col-lg-1 col-sm-1">TeamLeader Psno</th>
+
 </tr>
 </thead>
 </table>
@@ -187,10 +190,11 @@ $(document).ready(function(){
                  "data" : result,
                  "columns" : [
                 	 { "data" : "countme" },
+                	 { "data" : "memname" },
+                     { "data" : "mempsno" },
                      { "data" : "supname" },
-                     { "data" : "suppsno" },
-                     { "data" : "memname" },
-                     { "data" : "mempsno" }
+                     { "data" : "suppsno" }
+                     
                      ]                
              });
             }

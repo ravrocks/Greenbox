@@ -19,14 +19,17 @@
 
 <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-4.2.1.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="assets/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="assets/css/styles2.css">
 
 
 <!--  Javascripts -->
 
 <script src="assets/js/jquery-3.3.1.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
 <script src="assets/js/bootstrap-4.2.1.min.js"></script>
 <script src="assets/js/sweetalert2.all.min.js"></script>
+
 <script src="assets/js/script2.js"></script>
 <!--  IE support for sweetalert -->
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7.1.0/dist/promise.min.js"></script>
@@ -60,13 +63,33 @@ Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'doc
   </div>
   
   <div class="col-sm-8">
-    <input type="text" id="namez" class="form-control" name="namez" placeholder="Title" maxlength="60">
+    <div style="margin-bottom:10px;magin-top:20px">
+    <select class="js-example-basic-single form-control"  name="Category">
+       <option value="NTA" selected="selected" disabled>Select Category</option>
+  		<option value="OSS">OSS</option>
+  		<option value="NOC">NOC</option>
+  		<option value="DC IT">DC IT</option>
+  		<option value="DC Non IT">DC Non IT</option>
+  		<option value="Cybersecurity">Cybersecurity</option>
+  		<option value="Integration">Integration</option>
+	</select>
+	</div>
+	<div style="margin-bottom:10px;margin-top:10px">
+	<select class="js-example-basic-single-ac_type form-control"  name="Type of Activity"></select>
+	</div>
+	<div style="margin-bottom:10px;margin-top:10px">
+	<select class="js-example-basic-single-ac form-control" style="margin-bottom:10px" name="Activity"></select>
+	</div>
+	<div style="margin-bottom:10px;margin-top:10px">
+	<select class="js-example-basic-single-docname form-control" style="margin-bottom:10px" name="Document"></select>
+    </div>
+    
     <div id='tags' style="margin-top:5px">
     	    <link rel='stylesheet' href='assets/css/bootstrap-3.3.6.min.css'>
 			<link rel='stylesheet' type="text/css" href="assets/css/bootstap-tagsinput.css">
 			<input type="text" value="" maxlength="80" data-role="tagsinput" class="form-control" placeholder="Enter tags separted by comma(,)" required/>
 			<!-- partial -->
-			<script src='assets/js/jquery-3.3.1.min.js'></script>
+			
 			<script src='assets/js/bootstrap-4.2.1.min.js'></script>
 			<script src='https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js'></script>
     </div>
@@ -89,13 +112,37 @@ Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'doc
 <script>
 var success=true;
 $(document).ready(function(){
+	
+	var $eventSelect = $(".js-example-basic-single");
+	console.log($eventSelect);
+	$eventSelect.select2();
+    $eventSelect.on("select2:select", function (e) { 
+    	var data = e.params.data;
+       // console.log(data.text);
+        $.ajax({
+            type: "POST",
+            url: "GetExtraDetails",
+            data: {get_this:data.text},
+            success : function(responseText) {
+                if(responseText=="")
+                showError(responseText);
+                else
+                   {
+                	showRest(JSON.parse(responseText)[0],JSON.parse(responseText)[1],JSON.parse(responseText)[2],JSON.parse(responseText)[3]);
+                   }
+                }
+            }); 
+    });
+	
 	$("#fsubmit").click(function (){
 		var joshObj=new FormData();
 		var succ_array=[];
 		$("#uploader .uploadDoc").each(function(){
 			var current_row=$(this);
-			var filename=current_row.find("#namez").val();
+			//var filename=current_row.find("#namez").val();
+			var filename=current_row.find(".js-example-basic-single-docname").select2('val');
 			var tags=current_row.find("#tags").find("input.form-control").val();
+			var catname=current_row.find(".js-example-basic-single").select2('val');
 			//console.log(current_row.find("#up"));
 			var ffcontent=current_row.find("#up").val();
 			if(filename.length<1 || tags.length<1 || ffcontent.length<1)
@@ -106,6 +153,7 @@ $(document).ready(function(){
 				}
 			joshObj.append("filename", filename);
 			joshObj.append("tags",tags);
+			joshObj.append("category",catname);
 			joshObj.append("content",current_row.find("#up")[0].files[0]);
 			var mefile=current_row.find("#up")[0].files[0].name;
 			var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm'];  //acceptable file types
@@ -120,7 +168,7 @@ $(document).ready(function(){
 		
 		if(checker(succ_array))
 		{
-			console.log("I'm in!");
+			//console.log("I'm in!");
 		  $.ajax({
 	            type: "POST",
 	            url: "UploadFile",
@@ -140,6 +188,7 @@ $(document).ready(function(){
 		}
 		var $div= $('#uploader').children().last();
 	});
+	
 	
 	function showError(txxt)
     {
@@ -162,6 +211,18 @@ $(document).ready(function(){
 	    }).then(function(){ 
 	    	window.close();
 	    });
+	}
+	function showRest(get_docname,get_activity,get_tender_clause,get_activity_type)
+	{
+
+		$(".js-example-basic-single-ac_type").empty();
+		$(".js-example-basic-single-docname").empty();
+		$(".js-example-basic-single-ac").empty();
+		
+		$(".js-example-basic-single-ac").select2({data:get_activity});
+		$(".js-example-basic-single-docname").select2({data:get_docname});
+		$(".js-example-basic-single-ac_type").select2({data:get_activity_type});
+		
 	}
 });
 </script>

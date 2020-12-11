@@ -53,16 +53,14 @@ public class GetFilterData extends HttpServlet {
 		  PrintWriter out = response.getWriter();  
 		  String requestz = request.getParameter("filters");
 		  
-		    Connection connection = null;
+		    
 		    ResultSet rs = null;
 		    Set set=new HashSet();
-		  	String alwords = null;
-			String uname =  null;
-			String sdates = null;
-			String edates = null;
+		  	String alwords = null,uname =  null,sdates = null,edates = null,docs_to_search=null,cat_search=null;
+			
 			JsonElement joshObj=null;
 			
-		try {
+		try(Connection connection=new getConnection().getConnection();) {
 			//Parsing loogic
             JsonParser jp = new JsonParser();
             JsonElement je = jp.parse(requestz);
@@ -75,6 +73,8 @@ public class GetFilterData extends HttpServlet {
               uname=off.get("user").toString().trim();
               sdates=off.get("sdate").toString().trim();
               edates=off.get("edate").toString().trim();
+              docs_to_search=off.get("docsearch").toString().toLowerCase().trim();
+              cat_search=off.get("category").toString().trim();
               //System.out.println("allwords is-"+alwords);
               //System.out.println("user is-"+uname);
               //System.out.println("sdate is-"+sdates);
@@ -82,7 +82,8 @@ public class GetFilterData extends HttpServlet {
              }
 			 if(uname.length()<1)
 					uname="%";
-			 
+			 if(docs_to_search.length()<1)
+				 docs_to_search="";
 			 
 			 Date sdate = null;
 			 Date edate = null;
@@ -96,23 +97,79 @@ public class GetFilterData extends HttpServlet {
 					// TODO Auto-generated catch block
 					//e1.printStackTrace();
 				}
-			 String[] str = alwords.split(",");
+			    if(alwords.length()<1)
+			    {
+			    	JSONArray jarray_tosend = new JSONArray();
+			    	String sql ="select id,docname, username, date_, appdate, tag2 from document_details where UPPER(catname) like UPPER('%"+cat_search+"%') AND LOWER(docname) like '%"+docs_to_search+"%' AND username like '%"+uname+"%'";
+					PreparedStatement ps = connection.prepareStatement(sql);
+					System.out.println("coming- "+cat_search);
+					rs=ps.executeQuery();
+					
+					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0",id="\0";
+					int arry=0;
+					
+			    	while(rs.next())
+						{
+			    		Map<String, String> mapzz = new HashMap<String, String>();
+			    		JSONObject json_tosend = new JSONObject();
+						documentname= rs.getString(2);
+						username=rs.getString(3);
+						subdate=rs.getString(4);
+						appdate=rs.getString(5);
+						tags=rs.getString(6);
+						id=rs.getInt(1)+"";
+						
+						set.add(rs.getInt(1)+"");
+							
+						String[] str1=tags.split(",");
+						mapzz.put("documentname",documentname);
+						mapzz.put("username",username);
+						mapzz.put("uploaddate",subdate);
+						mapzz.put("app_date",appdate);
+							
+						json_tosend.accumulateAll(mapzz);
+							
+						List<String> list_tags = new ArrayList<String>();
+					    for(int j=0;j<str1.length;j++){
+					    	if((j==0)&&(j+1==str1.length))
+			    				list_tags.add(str1[j].substring(1, str1[j].length()-1));
+			    			else if(j==0)
+				    				list_tags.add(str1[j].substring(1, str1[j].length()));
+				    			else if(j+1==str1.length)
+				    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
+				    			else
+				    				list_tags.add(str1[j]);
+					    		}
+					    json_tosend.accumulate("tags", list_tags);
+					    jarray_tosend.add(arry,json_tosend);
+					    arry++;
+						
+					}
+			    	
+			    	rs.close();
+					connection.close();
+					out.write(jarray_tosend.toString());
+			    }
+			    else
+			    {
+			    String[] str = alwords.split(",");
 				int length = str.length;
-				connection = new getConnection().getConnection();
 				JSONArray jarray_tosend = new JSONArray();
 				int arry=0;
 				for(int i=0;i<length;i++)
 				  {
 					//System.out.println(" value of i "+i);
 					String sql;
-					if(sdate==null){
-					sql ="select id,docname, username, date_, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '"+uname+"'" ;
-					PreparedStatement ps = connection.prepareStatement(sql);
-					System.out.println("coming- "+str[i].toLowerCase());
-					rs=ps.executeQuery();
+					
+					if(sdate==null)
+					{
+						sql ="select id,docname, username, date_, appdate, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND LOWER(docname) like '%"+docs_to_search+"%'";
+						PreparedStatement ps = connection.prepareStatement(sql);
+						System.out.println("coming- "+str[i].toLowerCase());
+						rs=ps.executeQuery();
 					}
 					else{
-				    sql ="select id,docname, username, date_, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '"+uname+"' AND date_>=? AND date_<=?";
+				    sql ="select id,docname, username, date_, appdate, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND date_>=? AND date_<=? AND LOWER(docname) like '%"+docs_to_search+"%'";
 				    PreparedStatement ps = connection.prepareStatement(sql);
 					ps.setString(1, uname);
 					ps.setDate(2, (java.sql.Date)sdate);
@@ -120,10 +177,7 @@ public class GetFilterData extends HttpServlet {
 					rs=ps.executeQuery(); 
 					}
 				
-					String documentname= "\0";
-					String username="\0";
-					String subdate="\0";
-					String tags="\0";
+					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0";
 					String id="\0";
 					
 			    	while(rs.next())
@@ -133,24 +187,27 @@ public class GetFilterData extends HttpServlet {
 						documentname= rs.getString(2);
 						username=rs.getString(3);
 						subdate=rs.getString(4);
-						tags=rs.getString(5);
+						appdate=rs.getString(5);
+						tags=rs.getString(6);
+						
 						id=rs.getInt(1)+"";
 						if(i==0)
 					    	{
 							set.add(rs.getInt(1)+"");
-							//System.out.println(set); 
-							//System.out.println(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5));
-					    
+							
 							String[] str1=tags.split(",");
 							mapzz.put("documentname",documentname);
 							mapzz.put("username",username);
 							mapzz.put("uploaddate",subdate);
+							mapzz.put("app_date",appdate);
 							
 							json_tosend.accumulateAll(mapzz);
 							
 							List<String> list_tags = new ArrayList<String>();
 					    	for(int j=0;j<str1.length;j++){
-					    		if(j==0)
+					    		if((j==0)&&(j+1==str1.length))
+				    				list_tags.add(str1[j].substring(1, str1[j].length()-1));
+				    			else if(j==0)
 				    				list_tags.add(str1[j].substring(1, str1[j].length()));
 				    			else if(j+1==str1.length)
 				    				list_tags.add(str1[j].substring(0, str1[j].length()-1));
@@ -172,6 +229,7 @@ public class GetFilterData extends HttpServlet {
 							 	mapzz.put("documentname",documentname);
 								mapzz.put("username",username);
 								mapzz.put("uploaddate",subdate);
+								mapzz.put("app_date",appdate);
 								
 								json_tosend.accumulateAll(mapzz);
 								List<String> list_tags = new ArrayList<String>();
@@ -185,7 +243,7 @@ public class GetFilterData extends HttpServlet {
 								}
 							 json_tosend.accumulate("tags", list_tags);
 							 jarray_tosend.add(arry,json_tosend);
-						    	arry++;
+						     arry++;
 							}
 						}
 					}
@@ -194,10 +252,11 @@ public class GetFilterData extends HttpServlet {
 				rs.close();
 			  connection.close();
 			  out.write(jarray_tosend.toString());
+			  }
 			}
 			catch(Exception e)
 			{
-				System.out.println("Help me: "+e.toString());
+				System.out.println("Help me [GetFilterData]: "+e.toString());
 			}
 	}
 

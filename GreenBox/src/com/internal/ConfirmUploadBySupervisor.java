@@ -93,6 +93,8 @@ public class ConfirmUploadBySupervisor extends HttpServlet {
  		    
  			}
  			String cleaned = sbr.toString();
+ 			
+ 			
          ////////////////////////////////////
 
          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -119,8 +121,8 @@ public class ConfirmUploadBySupervisor extends HttpServlet {
          prepS.close();
          
          
-         String copystuff="INSERT INTO document_details(docname, username, date_, tag2, contents, extension, appby, appdate, userpsno)\r\n" + 
-         		"SELECT docname, username, date_, tag2, contents, extension, appby, appdate, userpsno FROM  document_details_backup WHERE docname=? and tag2='{"+sbr.toString()+"}' and date_=? and username=? and userpsno=? and status like 'Approved'";
+         String copystuff="INSERT INTO document_details(id,docname, username, date_, tag2, contents, extension, appby, appdate, userpsno, catname)\r\n" + 
+         		"SELECT id,docname, username, date_, tag2, contents, extension, appby, appdate, userpsno, catname FROM  document_details_backup WHERE docname=? and tag2='{"+cleaned+"}' and date_=? and username=? and userpsno=? and status like 'Approved'";
          prepSS=conn.prepareStatement(copystuff);
          prepSS.setString(1,docname);
          prepSS.setDate(2, (java.sql.Date)sdate);

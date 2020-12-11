@@ -84,6 +84,7 @@ public class UploadFile extends HttpServlet{
 	           InputStream inputStream = null;
 	           ArrayList<String> flist=new ArrayList<String>();
 	           ArrayList<String> tlist=new ArrayList<String>();
+	           ArrayList<String> category_list=new ArrayList<String>();
 	           String elist="";
 	           
 	           while ( iter.hasNext () ) 
@@ -94,6 +95,8 @@ public class UploadFile extends HttpServlet{
 	        		   String value = item.getString();
 	        		   if(name.equalsIgnoreCase("filename"))
 	        			   flist.add(value);
+	        		   else if(name.equalsIgnoreCase("category"))
+	        			   category_list.add(value);
 	        		   else
 	        			   tlist.add(value);
 	        	   } else {
@@ -107,12 +110,12 @@ public class UploadFile extends HttpServlet{
 	        	   {
 	        		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	        		   Date dt=new Date();
-	        		   String query="insert into document_details_backup(docname,username,date_,tag2,contents,extension,userpsno) values(?,?,?,'{"+tlist.get(0)+"}',?,?,?)";
+	        		   String query="insert into document_details_backup(docname,username,date_,tag2,contents,extension,userpsno,catname) values(?,?,?,'{"+tlist.get(0)+"}',?,?,?,?)";
 	        		   PreparedStatement prepS = conn.prepareStatement(query);
         			   conn.setAutoCommit(false);
 	        		   for(int i=0;i<flist.size();i++)
 	        		   {
-	        			   prepS.setString(1, flist.get(i));
+	        			   prepS.setString(1, flist.get(i).trim());
 	        			   prepS.setString(2, userName);
 	        			   java.sql.Date datezz=java.sql.Date.valueOf(sdf.format(dt));
 	        			   prepS.setDate(3, datezz);
@@ -122,6 +125,7 @@ public class UploadFile extends HttpServlet{
 	        			   prepS.setBinaryStream(4, inputStream);
 	        			   prepS.setString(5, elist);
 	        			   prepS.setInt(6, Integer.parseInt(userPsno.trim()));
+	        			   prepS.setString(7, category_list.get(i));
 	        			   prepS.addBatch();
 	        		   }
 	        		   prepS.executeBatch();

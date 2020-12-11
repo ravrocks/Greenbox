@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="com.internal.getConnection" %>
+    <%@page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,8 +24,8 @@
                 <div class="col-md-6 col-md-offset-3 " id="login-box">
                     <div class="panel panel-login">
                         <div class="panel-heading">
-                        <div class="logo">
-                            <img src="assets/images/lnt_Swc_logo.jpg">   
+                        <div class="logo" style="width:275px;height:85px">
+                            <img src="assets/images/swc_logo_new.jpg" style="max-width: 100%;max-height: 100%;">   
                         </div>
                         <div class="form-group">
                             <div class="row tab-head">
@@ -76,6 +78,34 @@
 									<div class="form-group">
 										<input type="text" name="designation" id="designation" tabindex="1" class="form-control" placeholder="Designation" required>
 									</div>
+									<div class="form-group">
+									 	<select name="supervisor" id="supervisor" tabindex="1" class="form-control" required>
+									 	    <option value="" disabled>Select TeamLeader/Supervisor</option>
+									 	    <option value="Optional">Optional</option>
+									<%
+									try{
+										//Class.forName("com.mysql.jdbc.Driver").newInstance();
+										Connection connx = new getConnection().getConnection();
+										String ghbn ="SELECT DISTINCT name AS supervisorname FROM userdata WHERE validity=1 AND CAST(psno as VARCHAR) IN (SELECT supervisor FROM userdata);";
+										PreparedStatement ps = connx.prepareStatement(ghbn); 
+										ResultSet rs=ps.executeQuery();
+										int count=0;
+										String supname="\0";
+										while(rs.next()){
+										supname=rs.getString("supervisorname");%>
+										<option value="<%= rs.getString(1)%>"><%= rs.getString(1)%></option>
+										<% 
+										} 
+										rs.close();
+										ps.close();
+										connx.close();
+									}
+									catch(Exception ex){
+										System.err.print("Error in home -"+ex.toString());
+									}
+										%>
+									 </select>
+									 </div>
 									 <div class="form-group">
 									 	<select name="domain" id="domain" tabindex="1" class="form-control" required>
 									 	    <option value="" disabled>Select domain</option>

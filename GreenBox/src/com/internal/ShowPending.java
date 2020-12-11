@@ -98,7 +98,9 @@ public class ShowPending extends HttpServlet {
 				
 				List<String> list_tags = new ArrayList<String>();
 		    	for(int j=0;j<str1.length;j++){
-		    			if(j==0)
+		    		    if((j==0)&&(j+1==str1.length))
+	    				    list_tags.add(str1[j].substring(1, str1[j].length()-1));
+	    			    else if(j==0)
 		    				list_tags.add(str1[j].substring(1, str1[j].length()));
 		    			else if(j+1==str1.length)
 		    				list_tags.add(str1[j].substring(0, str1[j].length()-1));

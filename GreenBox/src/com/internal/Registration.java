@@ -35,8 +35,10 @@ public class Registration extends HttpServlet{
 		  String email = request.getParameter("email");
 		  String designation = request.getParameter("designation");
 		  String password = request.getParameter("password");
+		  String supervisor= request.getParameter("supervisor");
 		  String confirmpass = request.getParameter("confirmpass");
-		  String supervisor="MS";
+		  if(supervisor==null || supervisor.equalsIgnoreCase("Optional"))
+			  supervisor="MS";
 		  String usertype="user";
 		  String domain = request.getParameter("domain");
 		  int validity=0;

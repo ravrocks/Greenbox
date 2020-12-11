@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="assets/css/text-box.css"/>
 <link rel="stylesheet" href="assets/css/foopicker.css"/>
 <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
-    <link rel="stylesheet" href="assets/css/sweetalert2.css">
+<link rel="stylesheet" href="assets/css/sweetalert2.css">
 <link rel="icon" type="image/png" href="assets/images/faviconn.png">
 
 <style type="text/css">

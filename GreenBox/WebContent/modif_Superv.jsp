@@ -95,7 +95,7 @@ input[type=number] {
     <div>
       <div class="md-form mt-0">
         <input id="inputMDEx3" name="inputMDEx3" type="number" class="form-control" style="font-size:1.6rem" required>
-  		<label for="inputMDEx2">Supervisor PSno</label>
+  		<label for="inputMDEx2">Supervisor PSno [to be added]</label>
   		<div class="invalid-feedback">
         Numeric Characters only!
       	</div>
@@ -128,6 +128,7 @@ input[type=number] {
 
 
 <div class="col-md-6 col-lg-6 col-sm-6" style="">
+<label style="font-size:1.4rem">Available Users [Non-Supervisors]</label>
 <table id="dt_Table_sss" class="mdl-data-table" style="width:100%">
 <thead>
 <tr>
@@ -146,6 +147,7 @@ input[type=number] {
 </div>
 
 <div class="col-md-5 col-lg-5 col-sm-5" style="">
+<label style="font-size:1.4rem">Active Supervisors</label>
 <table id="dt_Table_ss" class="mdl-data-table" style="width:100%">
 <thead>
 <tr>

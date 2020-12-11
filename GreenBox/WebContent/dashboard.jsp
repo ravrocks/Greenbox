@@ -157,7 +157,7 @@ $(document).ready(function() {
                     fixedHeader: true,
                     columnDefs: [
                     	{
-                        targets: [ 0, 1, 2 ],
+                        targets: [ 0, 1, 2, 3 ],
                         className: 'mdl-data-table__cell--non-numeric'
                     	},
                     	{
@@ -167,7 +167,7 @@ $(document).ready(function() {
                     	},
                     	{
                     		orderable:false,
-                    		targets: [3,4]
+                    		targets: [4,5]
                     	}
                  	  ],
                      "sDom": '<"top">rt<"bottom"lp><"clear">',
@@ -176,6 +176,7 @@ $(document).ready(function() {
                          { "data" : "documentname" },
                          { "data" : "username" },
                          { "data" : "uploaddate" },
+                         { "data" : "app_date" },
                          { "data" : "tags" },
                          {"data"  : ""}
                         ]
@@ -212,7 +213,7 @@ $(document).ready(function() {
 <div class="container-fluid">
 
 <nav class="navbar navbar-expand-md navigation-clean">
-  <img class="img-fluid" style="height:auto" src="assets/images/lnt_Swc_logo.jpg">
+  <img class="img-fluid" style="height:auto;width:180px" src="assets/images/swc_logo_new.jpg">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -249,26 +250,34 @@ $(document).ready(function() {
 			<div class="row col-md-12 col-lg-12 col-sm-12" >
 								<form id="search-form" action="" role="form" style="display: block;" class="row col-md-12 col-lg-12 col-sm-12">
 								   	<div class="roww" style="text-align:left">
-									 	<div class="col-sm-3">
-								   			<label>Filter by Captions</label>
-								   			<input type="text" name="anywords" id="anywords" tabindex="1" class="form-control" placeholder="Enter tags separated by comma">
+									 	<div class="col-sm-2">
+								   			<label style="margin-top:-3px">Document Name</label>
+								   			<input type="text" name="anydocs" id="anydocs" tabindex="1" class="form-control" placeholder="Enter document name">
+								   		</div>
+								   		<div class="col-sm-1">
+								   			<label style="margin-top:0pxx">Category</label>
+								   			<input type="text" name="cats" id="cats" tabindex="2" class="form-control" placeholder="Enter type">
+								   		</div>
+									 	<div class="col-sm-2">
+								   			<label style="margin-top:-3px">Document Tags</label>
+								   			<input type="text" name="anywords" id="anywords" tabindex="3" class="form-control" placeholder="Enter tags separated by comma">
 								   		</div>
 								   		<div class="col-sm-2">
-								   			<label>Filter by Username</label>
-								   			<input type="text" name="username" id="username" tabindex="2" class="form-control">
+								   			<label>Username</label>
+								   			<input type="text" name="username" id="username" tabindex="4" placeholder="Enter username" class="form-control">
 								   		</div>
 								   		<div class="col-sm-2">
 								   			<label>From Date</label>
-								   			<input type="text" id="sdate" name="dates" id="dates" tabindex="3" class="form-control" placeholder="From Date">
+								   			<input type="text" id="sdate" name="dates" id="dates" tabindex="5" class="form-control" placeholder="From Date">
 								   			
 								   		</div>
 								   		<div class="col-sm-2">
 								   			<label>End Date</label>
-								   			<input type="text" id="tdate" name="dates" id="dates" tabindex="4" class="form-control" placeholder="End Date">
+								   			<input type="text" id="tdate" name="dates" id="dates" tabindex="6" class="form-control" placeholder="End Date">
 								   			
 								   		</div>
-								   		<div class="col-sm-3">
-								   			<a id="filterme" href="#" class="btn btn-info" style="margin-top:4vmin;float:right">
+								   		<div class="col-sm-1">
+								   			<a id="filterme" href="#" class="btn btn-info" style="margin-top:4vmin;">
           									<span class="glyphicon glyphicon-filter"></span> Filter 
         									</a>
 								   		</div>
@@ -282,6 +291,7 @@ $(document).ready(function() {
                 			<th>Document name</th>
                 			<th>Uploaded By</th>
                 			<th>Uploaded Date</th>
+                			<th>Approved Date</th>
                 			<th>Document Tags</th>
                 			<th></th>
             			</tr>
@@ -310,13 +320,14 @@ function loadmetoo()
     jQuery("#sectionList").load('penuploads.jsp');	
 }
 
-function validateInputs(tfir,usec,sdda,edda)
+function validateInputs(docsearch,catsearch,tfir,usec,sdda,edda)
 {
 	var valiid=true;
-	if(tfir=="")
+	
+	if(catsearch=="")
 		{
-		   alert("Caption names is mandatory field.");
-		   var capElem = $("#anywords");
+		   alert("Category name is mandatory field.");
+		   var capElem = $("#cats");
 		   //capElem.parent().css({"color": "red", "border": "2px solid red"});
 		   capElem.before("<div id='validtags' style='color:red;margin-bottom: 0px;'>Required Field</div>");
 		    setTimeout(
@@ -363,14 +374,18 @@ $(document).ready(function(){
 	    });
 	
 	$("#filterme").click(function (){
+		var docname=$("#anydocs").val();
+		var catname=$("#cats").val();
 		var tname=$("#anywords").val();
 		var uname=$("#username").val();
 		var sdate=$("#sdate").val();
 		var edate=$("#tdate").val();
-		var result=validateInputs(tname,uname,sdate,edate);
+		var result=validateInputs(docname,catname,tname,uname,sdate,edate);
 		if(result)
 			{
 			itemx = {};var sendObj=[];
+			itemx["docsearch"]= docname;
+			itemx["category"]=catname;
         	itemx ["allwords"] = tname;
         	itemx ["user"] = uname;
         	itemx ["sdate"]=sdate;
@@ -391,7 +406,7 @@ $(document).ready(function(){
                         fixedHeader: true,
                     	columnDefs: [
                         	{
-                            targets: [ 0, 1, 2 ],
+                            targets: [ 0, 1, 2, 3 ],
                             className: 'mdl-data-table__cell--non-numeric'
                         	},
                         	{
@@ -401,7 +416,7 @@ $(document).ready(function(){
                         	},
                         	{
                         		orderable:false,
-                        		targets: [3,4]
+                        		targets: [4,5]
                         	}
                      	  ],
                          "sDom": '<"top">rt<"bottom"lp><"clear">',
@@ -410,6 +425,7 @@ $(document).ready(function(){
                              { "data" : "documentname" },
                              { "data" : "username" },
                              { "data" : "uploaddate" },
+                             { "data" : "app_date" },
                              { "data" : "tags" },
                              {"data"  : "" }
                              ]
