@@ -196,8 +196,8 @@ function showInfo()
     type: 'info',
     confirmButtonText: 'Ok'
     }).then(function(){
-    	console.log("Reloading stuff");
-    	location.reload();
+    	document.getElementById("sectionList").innerHTML = "";
+        jQuery("#sectionList").load('penuploads.jsp');
     	}
     );
 }
