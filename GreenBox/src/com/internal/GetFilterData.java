@@ -100,12 +100,12 @@ public class GetFilterData extends HttpServlet {
 			    if(alwords.length()<1)
 			    {
 			    	JSONArray jarray_tosend = new JSONArray();
-			    	String sql ="select id,docname, username, date_, appdate, tag2 from document_details where UPPER(catname) like UPPER('%"+cat_search+"%') AND LOWER(docname) like '%"+docs_to_search+"%' AND username like '%"+uname+"%'";
+			    	String sql ="select id,docname, username, date_, appdate, tag2,catname from document_details where UPPER(catname) like UPPER('%"+cat_search+"%') AND LOWER(docname) like '%"+docs_to_search+"%' AND username like '%"+uname+"%'";
 					PreparedStatement ps = connection.prepareStatement(sql);
 					System.out.println("coming- "+cat_search);
 					rs=ps.executeQuery();
 					
-					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0",id="\0";
+					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0",id="\0",cat_print="\0";
 					int arry=0;
 					
 			    	while(rs.next())
@@ -117,6 +117,7 @@ public class GetFilterData extends HttpServlet {
 						subdate=rs.getString(4);
 						appdate=rs.getString(5);
 						tags=rs.getString(6);
+						cat_print=rs.getString(7);
 						id=rs.getInt(1)+"";
 						
 						set.add(rs.getInt(1)+"");
@@ -126,6 +127,7 @@ public class GetFilterData extends HttpServlet {
 						mapzz.put("username",username);
 						mapzz.put("uploaddate",subdate);
 						mapzz.put("app_date",appdate);
+						mapzz.put("category", cat_print);
 							
 						json_tosend.accumulateAll(mapzz);
 							
@@ -163,13 +165,13 @@ public class GetFilterData extends HttpServlet {
 					
 					if(sdate==null)
 					{
-						sql ="select id,docname, username, date_, appdate, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND LOWER(docname) like '%"+docs_to_search+"%'";
+						sql ="select id,docname, username, date_, appdate, tag2, catname from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND LOWER(docname) like '%"+docs_to_search+"%'";
 						PreparedStatement ps = connection.prepareStatement(sql);
 						System.out.println("coming- "+str[i].toLowerCase());
 						rs=ps.executeQuery();
 					}
 					else{
-				    sql ="select id,docname, username, date_, appdate, tag2 from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND date_>=? AND date_<=? AND LOWER(docname) like '%"+docs_to_search+"%'";
+				    sql ="select id,docname, username, date_, appdate, tag2, catname from document_details where lower(tag2::text)::text[] @> ARRAY['"+str[i].toLowerCase()+"'] AND username like '%"+uname+"%' AND date_>=? AND date_<=? AND LOWER(docname) like '%"+docs_to_search+"%'";
 				    PreparedStatement ps = connection.prepareStatement(sql);
 					ps.setString(1, uname);
 					ps.setDate(2, (java.sql.Date)sdate);
@@ -177,7 +179,7 @@ public class GetFilterData extends HttpServlet {
 					rs=ps.executeQuery(); 
 					}
 				
-					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0";
+					String username="\0",documentname= "\0",subdate="\0",appdate="\0",tags="\0",cat_print="\0";
 					String id="\0";
 					
 			    	while(rs.next())
@@ -189,6 +191,7 @@ public class GetFilterData extends HttpServlet {
 						subdate=rs.getString(4);
 						appdate=rs.getString(5);
 						tags=rs.getString(6);
+						cat_print=rs.getString(7);
 						
 						id=rs.getInt(1)+"";
 						if(i==0)
@@ -200,6 +203,7 @@ public class GetFilterData extends HttpServlet {
 							mapzz.put("username",username);
 							mapzz.put("uploaddate",subdate);
 							mapzz.put("app_date",appdate);
+							mapzz.put("category", cat_print);
 							
 							json_tosend.accumulateAll(mapzz);
 							
@@ -230,6 +234,7 @@ public class GetFilterData extends HttpServlet {
 								mapzz.put("username",username);
 								mapzz.put("uploaddate",subdate);
 								mapzz.put("app_date",appdate);
+								mapzz.put("category", cat_print);
 								
 								json_tosend.accumulateAll(mapzz);
 								List<String> list_tags = new ArrayList<String>();

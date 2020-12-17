@@ -46,12 +46,12 @@ public class Fetch_All extends HttpServlet {
 		    Connection connection = null;
 		    ResultSet rs = null;
 		    String documentname= "\0";
-			String username="\0",subdate="\0",appdate="\0",tags="\0",id="\0";
+			String username="\0",subdate="\0",appdate="\0",tags="\0",id="\0",catprint="\0";
 			JSONArray jarray_tosend = new JSONArray();
 			int arry=0;
 		    try {
 		    	connection=new getConnection().getConnection();
-		    	String sqlq ="select docname, username, date_, appdate, tag2 from document_details";
+		    	String sqlq ="select docname, username, date_, appdate, catname, tag2 from document_details";
 		        PreparedStatement ps = connection.prepareStatement(sqlq);
 		        rs=ps.executeQuery();
 		        while(rs.next())
@@ -62,12 +62,15 @@ public class Fetch_All extends HttpServlet {
 					username=rs.getString(2);
 					subdate=rs.getString(3);
 					appdate=rs.getString(4);
-					tags=rs.getString(5);
+					catprint=rs.getString(5);
+					tags=rs.getString(6);
+					
 					String[] str1=tags.split(",");
 					mapzz.put("documentname",documentname);
 					mapzz.put("username",username);
 					mapzz.put("uploaddate",subdate);
 					mapzz.put("app_date",appdate);
+					mapzz.put("category", catprint);
 					
 					json_tosend.accumulateAll(mapzz);
 					

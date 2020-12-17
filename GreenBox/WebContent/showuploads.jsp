@@ -189,7 +189,12 @@ function startRemove(incoming) {
 	                data: {removethis:JSON.stringify(incoming)},
 	                success : function(responseText){
 	                	if(responseText=="")
-	                		Swal.fire("Deleted!", "Your file has been deleted.", "success");
+	                		{
+	                		Swal.fire("Deleted!", "Your file has been deleted.", "success").then(function(){
+	                			document.getElementById("sectionList").innerHTML = "";
+	                		    jQuery("#sectionList").load('showuploads.jsp');	
+	                			});
+	                		}	                		   
 	                	else
 	                		Swal.fire("Error!", "Deletion failed."+responseText, "error");
 	                }

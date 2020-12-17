@@ -20,7 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 
+import com.google.common.io.ByteSource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -110,6 +112,9 @@ public class DownloadOwnFile extends HttpServlet {
 			  	{
 			  		fileetype=ress.getString("extension");
 			  		inputStream=ress.getBinaryStream("contents");
+			  		byte[] dec_data=com.internal.EncDecData.decrypt(IOUtils.toByteArray(inputStream));
+		             InputStream targetStream = ByteSource.wrap(dec_data).openStream();
+		             inputStream=targetStream;
 			  	}
 			  	ress.close();
 			  	prepS.close();

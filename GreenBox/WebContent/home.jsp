@@ -263,7 +263,13 @@ $(function(){
         text: txxt,
         type: 'error',
         confirmButtonText: 'Retry'
-        });
+        }).then(function(){
+        	if ( window.history.replaceState ) {
+      		  window.history.replaceState( null, null, window.location.href );
+      		}
+      	window.location.replace("home.jsp");
+      }
+   );
     }
     function showRError(txxt)
     {

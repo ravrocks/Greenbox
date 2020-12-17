@@ -1,3 +1,4 @@
+<%@page import="com.internal.SendMail"%>
 <%@page import="com.internal.getConnection"%>
 <%@page import="java.util.Calendar"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -39,7 +40,18 @@ ps.setInt(1, 1);
 ps.setInt(2, Integer.parseInt(psn));
 ps.executeUpdate();
 ps.close();
+PreparedStatement ps2 = connection.prepareStatement("select email from userdata where psno=?"); 
+ps2.setInt(1, Integer.parseInt(psn));
+ResultSet rsz=ps2.executeQuery();
+rsz.next();
+String to_send=rsz.getString(1);
+rsz.close();
+ps2.close();
 connection.close();
+String content_prepare="<div><p>Your account access has been successfully approved.</p><p> Kindly login to the app- 'https://14.141.163.130:7879/GreenBox' ";
+SendMail ssdz=new SendMail(to_send,content_prepare,"GreenBox User Approval");
+
+
 } 
 catch (Exception e) {
 e.printStackTrace();

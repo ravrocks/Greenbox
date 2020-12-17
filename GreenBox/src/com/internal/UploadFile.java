@@ -29,10 +29,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
+
+import com.google.common.io.ByteSource;
 @WebServlet
 @MultipartConfig
 public class UploadFile extends HttpServlet{
@@ -101,6 +104,9 @@ public class UploadFile extends HttpServlet{
 	                   //System.out.println(item.getContentType());
 	                   elist=item.getContentType();
 	                   inputStream = item.getInputStream();
+	                   byte[] enc_data=com.internal.EncDecData.encrypt(IOUtils.toByteArray(inputStream));
+	                   InputStream targetStream = ByteSource.wrap(enc_data).openStream();
+	                   inputStream=targetStream;
 	        	    }
 	        	   if(inputStream!=null)
 	        	   {

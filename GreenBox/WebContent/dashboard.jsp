@@ -157,7 +157,7 @@ $(document).ready(function() {
                     fixedHeader: true,
                     columnDefs: [
                     	{
-                        targets: [ 0, 1, 2, 3 ],
+                        targets: [ 0, 1, 2, 3 ,4],
                         className: 'mdl-data-table__cell--non-numeric'
                     	},
                     	{
@@ -167,13 +167,14 @@ $(document).ready(function() {
                     	},
                     	{
                     		orderable:false,
-                    		targets: [4,5]
+                    		targets: [5,6]
                     	}
                  	  ],
                      "sDom": '<"top">rt<"bottom"lp><"clear">',
                      "data" : result,
                      "columns" : [
                          { "data" : "documentname" },
+                         { "data" : "category" },
                          { "data" : "username" },
                          { "data" : "uploaddate" },
                          { "data" : "app_date" },
@@ -289,6 +290,7 @@ $(document).ready(function() {
         			<thead>
             			<tr>
                 			<th>Document name</th>
+                			<th>Category</th>
                 			<th>Uploaded By</th>
                 			<th>Uploaded Date</th>
                 			<th>Approved Date</th>
@@ -406,7 +408,7 @@ $(document).ready(function(){
                         fixedHeader: true,
                     	columnDefs: [
                         	{
-                            targets: [ 0, 1, 2, 3 ],
+                            targets: [ 0, 1, 2, 3, 4 ],
                             className: 'mdl-data-table__cell--non-numeric'
                         	},
                         	{
@@ -416,13 +418,14 @@ $(document).ready(function(){
                         	},
                         	{
                         		orderable:false,
-                        		targets: [4,5]
+                        		targets: [5,6]
                         	}
                      	  ],
                          "sDom": '<"top">rt<"bottom"lp><"clear">',
                          "data" : result,
                          "columns" : [
                              { "data" : "documentname" },
+                             { "data" : "category" },
                              { "data" : "username" },
                              { "data" : "uploaddate" },
                              { "data" : "app_date" },

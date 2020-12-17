@@ -169,7 +169,14 @@ $(document).ready(function(){
 		if(checker(succ_array))
 		{
 			//console.log("I'm in!");
-		  $.ajax({
+			swal.fire({
+       			 title: 'Uploading...',
+       			 html: '<h4 id="status">',
+        		imageUrl:'assets/images/bean_eater.gif',
+        		showConfirmButton: false,
+        		allowOutsideClick: false,
+    			});
+			$.ajax({
 	            type: "POST",
 	            url: "UploadFile",
 	            enctype: 'multipart/form-data',
