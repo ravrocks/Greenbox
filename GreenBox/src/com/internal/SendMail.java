@@ -24,9 +24,6 @@ public class SendMail {
 		   // Sender's email ID needs to be mentioned
 		   String from = "swctic.greenbox@gmail.com";
 
-		   // Assuming you are sending email from localhost
-		   //String host = "localhost";
-
 		   // Get system properties object
 		   Properties props = System.getProperties();
 
