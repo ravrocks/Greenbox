@@ -263,13 +263,7 @@ $(function(){
         text: txxt,
         type: 'error',
         confirmButtonText: 'Retry'
-        }).then(function(){
-        	if ( window.history.replaceState ) {
-      		  	window.history.replaceState( null, null, window.location.href );
-      			}
-      			window.location.replace("home.jsp");
-      		}
-   		);
+        });
     }
     function showRError(txxt)
     {
@@ -278,14 +272,7 @@ $(function(){
         text: txxt,
         type: 'error',
         confirmButtonText: 'Retry'
-        }).then(function(){
-        	if ( window.history.replaceState ) {
-      		  	window.history.replaceState( null, null, window.location.href );
-      			}
-      			window.location.replace("home.jsp");
-      		}
-   		);
-    }
+        });
     }
     function showSuccess()
     {
@@ -294,13 +281,7 @@ $(function(){
         text: 'Registration is successful. Please wait for admin approval.',
         type: 'success',
         confirmButtonText: 'OK'
-        }).then(function(){
-        	if ( window.history.replaceState ) {
-      		  	window.history.replaceState( null, null, window.location.href );
-      			}
-      			window.location.replace("home.jsp");
-      		}
-   		);
+        });
     }
     function showInfo()
     {
