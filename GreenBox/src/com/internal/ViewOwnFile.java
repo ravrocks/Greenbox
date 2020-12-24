@@ -171,6 +171,10 @@ public class ViewOwnFile extends HttpServlet {
 		break;
 		case "image/png": rtn="png";
 		break;
+		case "application/zip": rtn="zip";
+		break;
+		case "application/x-zip-compressed": rtn="zip";
+		break;
 		case "image/jpeg": rtn="jpeg";
 		break;
 		case "text/plain": rtn="txt";

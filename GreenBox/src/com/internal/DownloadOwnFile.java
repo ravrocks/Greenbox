@@ -171,11 +171,15 @@ public class DownloadOwnFile extends HttpServlet {
 		break;
 		case "application/rtf": rtn="rtf";
 		break;
+		case "application/zip": rtn="zip";
+		break;
 		case "image/png": rtn="png";
 		break;
 		case "image/jpeg": rtn="jpeg";
 		break;
 		case "text/plain": rtn="txt";
+		break;
+		case "application/x-zip-compressed": rtn="zip";
 		break;
 		case "application/vnd.ms-excel": rtn="xls";
 		break;

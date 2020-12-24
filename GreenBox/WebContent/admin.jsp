@@ -62,7 +62,7 @@
                 <div class="card-header">
                     <ul class="nav nav-tabs" role="tablist" style="font-size:1.4rem">
                         <li class="nav-item"><a class="nav-link" href="#item-1-1" id="item-1-1-tab" data-toggle="tab" role="tab" aria-controls="item-1-1" aria-selected="true">User Authentication</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#item-1-2" id="item-1-2-tab" data-toggle="tab" role="tab" aria-controls="item-1-2" aria-selected="true">Modify Supervisor List</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#item-1-2" id="item-1-2-tab" data-toggle="tab" role="tab" aria-controls="item-1-2" aria-selected="true">Modify TeamLeader List</a></li>
                         <li class="nav-item"><a class="nav-link" href="#item-1-3" id="item-1-3-tab" data-toggle="tab" role="tab" aria-controls="item-1-3" aria-selected="false">Show/Modify Team</a></li>                   	
                     </ul>
                 </div>

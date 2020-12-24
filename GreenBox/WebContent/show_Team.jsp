@@ -116,7 +116,7 @@ input[type=number] {
       </div>
       <div class="md-form mt-0 ml-3 input-group" style="">
         <input type="number" id="inputMDEx2" name="inputMDEx2" class="form-control" style="font-size:1.6rem" required> 
-  		<label for="inputMDEx2" style="font-size:1.3rem">Supervisor PSno</label>
+  		<label for="inputMDEx2" style="font-size:1.3rem">TeamLeader PSno</label>
   		<div class="invalid-feedback">
         Numeric Characters only!
       	</div>
@@ -146,7 +146,7 @@ input[type=number] {
 </div>
 
 <div class="col-md-6 col-lg-6 col-sm-6" style="">
-<label style="font-size:1.4rem">List of Users with TeamLeader/Supervisor</label>
+<label style="font-size:1.4rem">Users attached to TeamLeader</label>
 <table id="dt_Table_s" class="mdl-data-table" style="width:100%;">
 <thead>
 <tr>

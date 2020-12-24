@@ -153,9 +153,13 @@ public class EditOwnFile extends HttpServlet {
 				break;
 				case "image/png": rtn="png";
 				break;
+				case "application/x-zip-compressed": rtn="zip";
+				break;
 				case "image/jpeg": rtn="jpeg";
 				break;
 				case "text/plain": rtn="txt";
+				break;
+				case "application/zip": rtn="zip";
 				break;
 				case "application/vnd.ms-excel": rtn="xls";
 				break;

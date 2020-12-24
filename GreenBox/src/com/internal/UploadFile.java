@@ -140,6 +140,9 @@ public class UploadFile extends HttpServlet{
 	           }
 	           PreparedStatement find_super_mail=conn.prepareStatement("select email from userdata u where CAST(u.psno as varchar) in (select supervisor from userdata u2 where u2.psno="+userPsno+")");
 	           ResultSet find_super_mail_result=find_super_mail.executeQuery();
+	           
+	           if(find_super_mail_result.isBeforeFirst())
+	           { 
 	           find_super_mail_result.next();
 	           String to_mail=find_super_mail_result.getString(1);
 	           find_super_mail_result.close();
@@ -167,6 +170,11 @@ public class UploadFile extends HttpServlet{
 			    
 	              }).start();
 	            }
+	           }
+	           else
+	           {
+	        	   find_super_mail_result.close();
+	           }
 	           //statz.close();
                conn.close();
                

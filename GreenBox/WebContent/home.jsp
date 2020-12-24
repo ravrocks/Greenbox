@@ -12,6 +12,7 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="assets/js/browserDetect.js"></script>
 <script src="assets/js/sweetalert2.all.min.js"></script>
 
 <link rel="stylesheet" href="assets/css/login.css">
@@ -83,7 +84,7 @@
 									</div>
 									<div class="form-group">
 									 	<select name="supervisor" id="supervisor" tabindex="1" class="form-control" required>
-									 	    <option value="" disabled>Select TeamLeader/Supervisor</option>
+									 	    <option value="" disabled>Select TeamLeader</option>
 									 	    <option value="Optional">Optional</option>
 									<%
 									try{
@@ -157,6 +158,19 @@
 </body>
 <script>
 
+$(document).ready(function() {
+	if(BrowserDetect.browser=="Explorer")
+	  {
+		alert("You are using Internet Explorer on which the web app is not supported. Kindly change the browser for seamless experience.");
+		window.open('', '_self', '').close();
+	  }
+	if(BrowserDetect.browser=="MS Edge")
+	  {
+		alert("You are using Microsoft Edge on which the web app is not supported. Kindly change the browser for seamless experience.");
+		window.open('', '_self', '').close();
+	  }
+ });
+ 
 function validate(evt) {
 	  var theEvent = evt || window.event;
 	  // Handle paste

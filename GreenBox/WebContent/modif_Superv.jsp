@@ -95,7 +95,7 @@ input[type=number] {
     <div>
       <div class="md-form mt-0">
         <input id="inputMDEx3" name="inputMDEx3" type="number" class="form-control" style="font-size:1.6rem" required>
-  		<label for="inputMDEx2">Supervisor PSno [to be added]</label>
+  		<label for="inputMDEx2">TeamLeader PsNo [to be added]</label>
   		<div class="invalid-feedback">
         Numeric Characters only!
       	</div>
@@ -112,7 +112,7 @@ input[type=number] {
     <div>
       <div class="md-form mt-0">
         <input id="inputMDEx7" name="inputMDEx7" class="form-control" type="number" style="font-size:1.6rem" required>
-  		<label for="inputMDEx7">Supervisor PSno [to be removed]</label>
+  		<label for="inputMDEx7">TeamLeader PsNo [to be removed]</label>
   		<div class="invalid-feedback">
         Numeric Characters only!
       	</div>
@@ -128,7 +128,7 @@ input[type=number] {
 
 
 <div class="col-md-6 col-lg-6 col-sm-6" style="">
-<label style="font-size:1.4rem">Available Users [Non-Supervisors]</label>
+<label style="font-size:1.4rem">Available Users [Normal Users]</label>
 <table id="dt_Table_sss" class="mdl-data-table" style="width:100%">
 <thead>
 <tr>
@@ -147,13 +147,13 @@ input[type=number] {
 </div>
 
 <div class="col-md-5 col-lg-5 col-sm-5" style="">
-<label style="font-size:1.4rem">Active Supervisors</label>
+<label style="font-size:1.4rem">Active TeamLeaders</label>
 <table id="dt_Table_ss" class="mdl-data-table" style="width:100%">
 <thead>
 <tr>
 <th scope="col" class="col-md-1 col-lg-1 col-sm-1">No.</th>
-<th scope="col" class="col-md-2 col-lg-2 col-sm-2">Supervisor Name</th>
-<th scope="col" class="col-md-2 col-lg-2 col-sm-2">Supervisor Psno</th>
+<th scope="col" class="col-md-2 col-lg-2 col-sm-2">TeamLeader Name</th>
+<th scope="col" class="col-md-2 col-lg-2 col-sm-2">TeamLeader Psno</th>
 </tr>
 </thead>
 </table>

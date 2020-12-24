@@ -104,7 +104,7 @@
 <script src="assets/js/jquery-3.3.1.min.js"></script>
 <script src="assets/js/bootstrap-4.2.1.min.js"></script>
 <script src="assets/js/sweetalert2.all.min.js"></script>
-<script src="assets/js/script2.js"></script>
+<script src="assets/js/script3.js"></script>
 <!--  IE support for sweetalert -->
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7.1.0/dist/promise.min.js"></script>
 
@@ -117,7 +117,7 @@
 <div class="row it">
 <div class="col-sm-offset-1 col-sm-10" id="one">
 <p>
-Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'docx', 'rtf', 'jpg', 'jpeg', 'png' and 'txt' format.
+Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'docx', 'rtf', 'jpg', 'jpeg', 'png' , 'zip' and 'txt' format.
 </p><br>
 <div class="row">
   <div class="col-sm-offset-4 col-sm-4 form-group">
@@ -190,7 +190,7 @@ $(document).ready(function(){
 			joshObj.append("imp_id",imp_id);
 			joshObj.append("content",current_row.find("#up")[0].files[0]);
 			var mefile=current_row.find("#up")[0].files[0].name;
-			var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm'];  //acceptable file types
+			var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm','zip'];  //acceptable file types
 			filezz= mefile.split('.');
 			var extension = filezz[1].toLowerCase();
 	        successd= fileTypes.indexOf(extension) > -1;

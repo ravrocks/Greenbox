@@ -164,6 +164,8 @@ public class DownloadFile extends HttpServlet {
 		break;
 		case "text/plain": rtn="txt";
 		break;
+		case "application/x-zip-compressed": rtn="zip";
+		break;
 		case "application/vnd.ms-excel": rtn="xls";
 		break;
 		case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": rtn="xlsx";
