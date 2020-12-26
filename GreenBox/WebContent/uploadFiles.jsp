@@ -102,6 +102,7 @@ Please upload documents only in 'pdf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx', 'doc
 </div><!--row-->
 
 </div><!--uploader-->
+
 <div class="text-center">
 <a class="btnn btn-new" ><i class="fa fa-plus"></i> Add new</a>
 <a class="btn btn-next" id="fsubmit"><i class="fa fa-paper-plane"></i> Submit</a>
@@ -161,17 +162,22 @@ $(document).ready(function(){
 			var mefile=current_row.find("#up")[0].files[0].name;
 			var fileTypes = ['pdf', 'docx','doc', 'rtf', 'jpg', 'jpeg', 'png', 'txt','csv','xls','xlsx','pptx','xltx','ppt','ppsx','xltx','xlsm','zip'];  //acceptable file types
 			filezz= mefile.split('.');
-			var extension = filezz[1].toLowerCase();
+			var extension = filezz[filezz.length-1].toLowerCase();
 	        successd= fileTypes.indexOf(extension) > -1;
-	        //console.log("val of successd-",successd);
 	        succ_array.push(successd);
 		});
 		
 		let checker = arr => arr.every(v => v === true);
 		
+		if(!successd)
+			{
+			showError("Invalid File Type");
+			return;
+			}
+		
 		if(checker(succ_array))
 		{
-			//console.log("I'm in!");
+			console.log("I'm in!");
 			swal.fire({
        			 title: 'Uploading...',
        			 html: '<h4 id="status">',

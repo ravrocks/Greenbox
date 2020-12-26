@@ -35,7 +35,7 @@ import com.google.common.io.ByteSource;
 public class ChangeUpload extends HttpServlet{
 	private boolean isMultipart;
 	   private String filePath;
-	   private int maxFileSize = 40000000;
+	   private int maxFileSize = 75000000;
 	   private int maxMemSize = 4 * 1024;
 	   
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

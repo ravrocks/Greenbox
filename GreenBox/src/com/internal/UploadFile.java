@@ -41,7 +41,7 @@ import com.google.common.io.ByteSource;
 public class UploadFile extends HttpServlet{
 	private boolean isMultipart;
 	   private String filePath;
-	   private int maxFileSize = 40000000;
+	   private int maxFileSize = 75000000;
 	   private int maxMemSize = 4 * 1024;
 	   
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -162,7 +162,7 @@ public class UploadFile extends HttpServlet{
 				   String from = "swctic.greenbox@gmail.com";
 				   
 				   try {
-					   SendMail ssdz=new SendMail(to,"<div><p>A new document has been uploaded by <b>"+by_username+"</b>. Kindly, take necessary action.</p></div>","GreenBox User Approval"); 
+					   SendMail ssdz=new SendMail(to,"<div><p>A new document has been uploaded by <b>"+by_username+"</b>. Kindly, take necessary action.</p></div>","File Upload Approval"); 
 				    	} catch (Exception mex) {
 				    		mex.printStackTrace();
 				    		System.err.println("Mail- Error: unable to send mail to supervisor..");
