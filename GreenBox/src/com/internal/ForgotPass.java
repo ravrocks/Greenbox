@@ -133,9 +133,7 @@ public class ForgotPass extends HttpServlet {
 		      // Set To: header field of the header.
 		      message.addRecipient(Message.RecipientType.TO,
 		                               new InternetAddress(to));
-		      message.addRecipient(Message.RecipientType.BCC, new InternetAddress(
-		              "djeswani@lntecc.com"));
-		      
+		      	      
 		      // Set Subject: header field
 		      message.setSubject("GreenBox Password Reset");
 		      
